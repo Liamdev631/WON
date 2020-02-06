@@ -19,6 +19,12 @@
     <Filter Include="Source Files\Components">
       <UniqueIdentifier>{e3a17d2e-3786-43f3-8da7-621e926c540d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Components\Graphics">
+      <UniqueIdentifier>{7d102963-7695-4b3a-a6b5-f86c5636acdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\Graphics">
+      <UniqueIdentifier>{aae3b791-4f05-4ba1-80fd-a139e96eaa11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameClient.cpp">
@@ -34,7 +40,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsComponent.cpp">
-      <Filter>Source Files\Components</Filter>
+      <Filter>Source Files\Components\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraComponent.cpp">
+      <Filter>Source Files\Components\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -51,7 +60,10 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsComponent.h">
-      <Filter>Header Files\Components</Filter>
+      <Filter>Header Files\Components\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraComponent.h">
+      <Filter>Header Files\Components\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

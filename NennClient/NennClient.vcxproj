@@ -134,6 +134,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="GameClient.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GraphicsComponent.cpp" />
@@ -141,6 +142,7 @@
     <ClCompile Include="NetworkComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="GameClient.h" />
     <ClInclude Include="ClientComponent.h" />
     <ClInclude Include="GameState.h" />

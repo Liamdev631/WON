@@ -1,4 +1,4 @@
-#pragma once
+#pragma once 
 #include "ClientComponent.h"
 #include <Irrlicht\irrlicht.h>
 
@@ -26,5 +26,10 @@ public:
 	void preTick() override;
 	void tick() override;
 	void postTick() override;
+
+	IrrlichtDevice* getDevice() const;
+	IVideoDriver* getVideoDriver() const;
+	ISceneManager* getSceneManager() const;
+	IGUIEnvironment* getGUI() const;
 };
 
