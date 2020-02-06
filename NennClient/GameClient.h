@@ -1,7 +1,6 @@
 #pragma once
 #include <memory>
 #include <vector>
-#include "GameState.h"
 
 using namespace std;
 
@@ -9,6 +8,9 @@ class ClientComponent;
 class NetworkComponent;
 class GraphicsComponent;
 class CameraComponent;
+class TerrainComponent;
+class GameStateComponent;
+class EntityComponent;
 
 class GameClient
 {
@@ -19,8 +21,9 @@ public:
 	unique_ptr<NetworkComponent> component_network;
 	unique_ptr<GraphicsComponent> component_graphics;
 	unique_ptr<CameraComponent> component_camera;
-
-	unique_ptr<GameState> _currentState;
+	unique_ptr<TerrainComponent> component_terrain;
+	unique_ptr<GameStateComponent> component_gameState;
+	unique_ptr<EntityComponent> component_entity;
 
 	GameClient();
 	~GameClient();

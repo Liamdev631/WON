@@ -23,7 +23,7 @@ constexpr float MaxSpeed = 1.0f;
 
 // Utility templates
 template <typename T>
-using EntityTable = array<T, NumberOfEntities>;
+using EntityTable = std::array<T, NumberOfEntities>;
 
 template <typename T>
-using PlayerTable = array<T, NumberOfPlayers>;
+using PlayerTable = std::array<T, NumberOfPlayers>;

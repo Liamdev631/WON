@@ -4,6 +4,10 @@
 GraphicsComponent::GraphicsComponent(const GameClient* client)
 	: ClientComponent(client), _device(nullptr), _driver(nullptr), _sceneManager(nullptr), _gui(nullptr)
 {
+	SIrrlichtCreationParameters params;
+	params.AntiAlias = 8;
+	params.Fullscreen = false;
+	params.DriverType = EDT_OPENGL;
 	_device = createDevice(video::EDT_OPENGL, dimension2d<u32>(640, 480), 16, false, false, false, 0);
 	if (!_device)
 		return;

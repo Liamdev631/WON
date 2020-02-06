@@ -4,8 +4,11 @@
 #include "Settings.h"
 #include "SFML\Network.hpp"
 #include <array>
+#include <json.hpp>
+#include <set>
 
 using namespace std;
+using namespace nlohmann;
 
 enum struct ConnectionStatus
 {
@@ -20,15 +23,13 @@ public:
 	array<ConnectionStatus, NumberOfPlayers> status;
 	array<sf::TcpSocket, NumberOfPlayers> socket;
 
-	Connections()
-		: status({})
-	{
-		for (int i = 0; i < NumberOfPlayers; i++)
-		{
-			status[i] = ConnectionStatus::Disconnected;
-			socket[i].setBlocking(false);
-		}
-	}
+	Connections();
+
+	// Sends a json message to the given receiver
+	void sendJson(const json& j, const Entity::UID receiver);
+
+	// Sends a json message to all the players in the list of receivers
+	void sendJson(const json& j, const set<Entity::UID> receivers);
 };
 
 class NetworkComponent : public ServerComponent

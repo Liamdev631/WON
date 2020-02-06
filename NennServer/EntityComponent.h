@@ -38,8 +38,8 @@ public:
 	// Entity management functions
 	void grabNextAvailablePlayer(Entity::UID uid);
 	Entity::UID grabNextAvailableNPC();
-	void onEntityRemoved(Entity::UID uid);
-	void onEntityAdded(Entity::UID uid);
+	void removeEntity(Entity::UID uid);
+	void setupNewEntity(Entity::UID uid);
 	
 	// Network functions
 	void sendPlayerUID(Entity::UID uid);

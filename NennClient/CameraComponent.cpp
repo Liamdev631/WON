@@ -1,6 +1,8 @@
 #include "CameraComponent.h"
 #include "GameClient.h"
 #include "GraphicsComponent.h"
+#include "GameStateComponent.h"
+#include "EntityComponent.h"
 #include <Irrlicht\irrlicht.h>
 
 using namespace irr;
@@ -17,22 +19,9 @@ CameraComponent::CameraComponent(const GameClient* client)
 	}
 
 	auto smgr = graphicsComponent->getSceneManager();
-	_cameraNode = smgr->addCameraSceneNode(nullptr, { 20, 15, 20, }, { 0, 1, 0 });
+	_cameraNode = smgr->addCameraSceneNode(nullptr, { 5, 2, 5, }, { 256, 1, 256 });
 	if (_cameraNode)
 		printf("CameraComponent: Initialized\n");
-
-	/* Test model
-	IAnimatedMesh* mesh = smgr->getMesh("../Content/models/sydney.md2");
-	if (mesh)
-	{
-		IAnimatedMeshSceneNode* node = smgr->addAnimatedMeshSceneNode(mesh);
-		if (node)
-		{
-			node->setMaterialFlag(EMF_LIGHTING, false);
-			node->setMD2Animation(scene::EMAT_STAND);
-			node->setMaterialTexture(0, graphicsComponent->getVideoDriver()->getTexture("../Content/models/sydney.bmp"));
-		}
-	}*/
 }
 
 CameraComponent::~CameraComponent()
@@ -47,7 +36,13 @@ void CameraComponent::preTick()
 
 void CameraComponent::tick()
 {
-
+	Entity::UID thisPlayerUID = _client->component_gameState->thisPlayersUID;
+	if (thisPlayerUID != NO_UID)
+	{
+		// Move the camera to follow the player
+		Entity& thisPlayer = _client->component_entity->getEntity(thisPlayerUID);
+		_cameraNode->setPosition({ thisPlayer.position.x, 5, thisPlayer.position.y });
+	}
 }
 
 void CameraComponent::postTick()

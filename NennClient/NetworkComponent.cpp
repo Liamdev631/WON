@@ -1,11 +1,11 @@
 #include "NetworkComponent.h"
-#include "Settings.h"
-#include <string>
-#include <json.hpp>
+#include "GameStateComponent.h"
+#include "EntityComponent.h"
+#include "CameraComponent.h"
 #include "GameClient.h"
-#include "GameState.h"
-#include "PacketData.h"
+#include <string>
 #include <vector>
+#include <json.hpp>
 
 using namespace std;
 using namespace nlohmann;
@@ -57,17 +57,12 @@ void NetworkComponent::tick()
 			packet >> s;
 			json j = json::parse(s);
 			string message = j["message"];
-			if (message == "entity-moved")
+			
+			// Determine which type of message to decode
+			if (message == "hello-player")
 			{
 				const Entity::UID uid = j["uid"];
-				const float x = j["x"];
-				const float y = j["y"];
-				break;
-			}
-			else if (message == "hello-player")
-			{
-				const Entity::UID uid = j["uid"];
-				_client->_currentState->thisPlayersUID = uid;
+				_client->component_gameState->thisPlayersUID = uid;
 				printf("NetworkComponent: You have been assigned uid %u\n", uid);
 				break;
 			}
@@ -76,11 +71,25 @@ void NetworkComponent::tick()
 				const Entity::UID uid = j["uid"];
 				const float x = j["x"];
 				const float y = j["y"];
-				printf("NetworkComponent: Entity %u moved to (%f, %f)\n", uid, x, y);
+				//printf("NetworkComponent: Entity %u moved to (%f, %f)\n", uid, x, y);
+				auto& entity = _client->component_entity->getEntity(uid);
+				entity.position = { x, y };
 				break;
 			}
 			else
+			{
+				printf("%s\n", message.c_str());
 				break;
+			}
+			/*else if (message == "entity-removed")
+			{
+				const Entity::UID uid = j["uid"];
+				printf("NetworkComponent: Entity %u removed\n", uid);
+				_client->component_entity->removeEntity(uid);
+				break;
+			}
+			else
+				break;*/
 		}
 
 		default:

@@ -38,46 +38,84 @@ void NetworkComponent::preTick()
 		// Setup a new connection
 		_server->component_entity->grabNextAvailablePlayer(newPlayerUID);
 		connections.status[newPlayerUID] = ConnectionStatus::Connected;
-
-		//auto ip = connections.socket[uid].getRemoteAddress();
 		printf("NetworkComponent: Client connected! uid=%u\n", newPlayerUID);
 
-		_server->component_entity->onEntityAdded(newPlayerUID);
+		json msg;
+		msg["message"] = "hello-player";
+		msg["uid"] = newPlayerUID;
+		connections.sendJson(msg, newPlayerUID);
+		_server->component_entity->setupNewEntity(newPlayerUID);
 
 		newPlayerUID = getNextSocket(connections);
 	}
-}
 
-void NetworkComponent::tick()
-{
 	// Recieve packets from all connected users
 	sf::Packet packet;
 	string messageType;
-	for (unsigned int uid = 0; uid < NumberOfPlayers; uid++)
+	for (Entity::UID uid = 0; uid < NumberOfPlayers; uid++)
 	{
 		if (connections.status[uid] == ConnectionStatus::Disconnected)
 			continue;
-		
+
+		// Grab the packet
 		auto status = connections.socket[uid].receive(packet);
 		if (status == sf::Socket::Status::Disconnected)
 		{
 			printf("NetworkComponent: Client disconnected uid=%u.\n", uid);
 			connections.status[uid] = ConnectionStatus::Disconnected;
-
-			_server->component_entity->onEntityRemoved(uid);
-
+			_server->component_entity->removeEntity(uid);
 			continue;
 		}
-
-		packet >> messageType;
-		if (messageType == "move-to-pos")
+		else if (status == sf::Socket::Status::Done)
 		{
-
+			// Convert the packet to json
+			string packetString;
+			packet >> packetString;
+			json msg = json::parse(packetString);
 		}
 	}
+}
+
+void NetworkComponent::tick()
+{
+
 }
 
 void NetworkComponent::postTick()
 {
 
 }
+
+Connections::Connections()
+	: status({})
+{
+	for (int i = 0; i < NumberOfPlayers; i++)
+	{
+		status[i] = ConnectionStatus::Disconnected;
+		socket[i].setBlocking(false);
+	}
+}
+
+void Connections::sendJson(const json& j, const Entity::UID receiver)
+{
+	if (status[receiver] == ConnectionStatus::Disconnected)
+		return;
+
+	// send json through packet
+	sf::Packet packet;
+	packet << j.dump(-1, ' ', true);
+	socket[receiver].send(packet);
+	return;
+}
+
+void Connections::sendJson(const json& j, const set<Entity::UID> receivers)
+{
+	// send json through packet
+	sf::Packet packet;
+	packet << j.dump(-1, ' ', true);
+	for (const Entity::UID player : receivers)
+		if (status[player] != ConnectionStatus::Disconnected)
+			socket[player].send(packet);
+	return;
+}
+

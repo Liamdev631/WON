@@ -61,25 +61,33 @@ void EntityComponent::grabNextAvailablePlayer(Entity::UID uid)
 	entity.active = true;
 }
 
-void EntityComponent::onEntityRemoved(Entity::UID uid)
+void EntityComponent::removeEntity(Entity::UID uid)
 {
-	_entityTable[uid].active = false;
+	auto& entity = _entityTable[uid];
+
+	// build json
+	json msg;
+	msg["message"] = "entity-removed";
+	msg["uid"] = uid;
+	_server->component_network->connections.sendJson(msg, getActivePlayers());
+
+	entity.active = false;
 	_activeEntities.erase(uid);
 	if (isPlayer(uid))
 		_activePlayers.erase(uid);
 }
 
-void EntityComponent::onEntityAdded(Entity::UID uid)
+void EntityComponent::setupNewEntity(Entity::UID uid)
 {
 	if (isPlayer(uid))
 	{
 		// Tell the player about all nearby entities, including itself
-		for (Entity::UID entity : _server->component_entity->getActiveEntities())
+		for (Entity::UID entity : getActiveEntities())
 			sendEntityUpdateToPlayer(entity, uid);
 	}
 
 	// Tell nearby players about this entity
-	for (Entity::UID player : _server->component_entity->getActivePlayers())
+	for (Entity::UID player : getActivePlayers())
 		if (player != uid)
 			sendEntityUpdateToPlayer(player, uid);
 }
@@ -102,7 +110,7 @@ void EntityComponent::tick()
 		for (Entity::UID uid = 0; uid < NumberOfPlayers; uid++)
 			if (_server->component_network->connections.status[uid] == ConnectionStatus::Reconnecting)
 				if (_timeoutTable[uid]-- == 0)
-					onEntityRemoved(uid);
+					removeEntity(uid);
 	}
 }
 
@@ -133,15 +141,10 @@ void EntityComponent::sendEntityUpdateToPlayer(Entity::UID from, Entity::UID to)
 {
 	auto entity = _entityTable[from];
 
-	// build json
 	json msg;
 	msg["message"] = "entity-update";
 	msg["uid"] = from;
 	msg["x"] = entity.position.x;
 	msg["y"] = entity.position.y;
-	
-	// send json through packet
-	sf::Packet packet;
-	packet << msg.dump();
-	_server->component_network->connections.socket[to].send(packet);
+	_server->component_network->connections.sendJson(msg, to);
 }
