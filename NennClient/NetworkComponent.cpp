@@ -76,13 +76,18 @@ void NetworkComponent::tick()
 					//printf("NetworkComponent: Entity %u moved to (%f, %f)\n", uid, x, y);
 					auto& entity = _client->component_entity->getEntity(uid);
 					entity.position = { x, y };
-					printf("%u\n", uid);
+					//printf("%u\n", uid);
 
 					break;
 				}
+				else if (message == "print-string")
+				{
+					string str = j["string"];
+					printf("PRINT: %s\n", str.c_str());
+				}
 				else
 				{
-					printf("%s\n", message.c_str());
+					printf("Unimplemented message type: '%s'\n", message.c_str());
 					break;
 				}
 				/*else if (message == "entity-removed")

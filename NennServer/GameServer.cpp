@@ -5,6 +5,7 @@
 #include <thread>
 #include <chrono>
 
+using namespace std;
 using namespace chrono_literals;
 
 GameServer::GameServer()
@@ -27,6 +28,13 @@ GameServer::~GameServer()
 
 void GameServer::tick()
 {
+	static int tick = 0;
+	printf("tick\n");
+	json j;
+	j["message"] = "print-string";
+	j["string"] = "tick " + std::to_string(tick++);
+	component_network->connections.sendJson(j, component_entity->getActivePlayers());
+
 	for (auto c : _components)
 		c->preTick();
 	for (auto c : _components)
@@ -34,5 +42,5 @@ void GameServer::tick()
 	for (auto c : _components)
 		c->postTick();
 
-	this_thread::sleep_for(1s / 10);
+	this_thread::sleep_for(100ms);
 }

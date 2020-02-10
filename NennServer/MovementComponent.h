@@ -1,8 +1,8 @@
 #pragma once
 #include "ServerComponent.h"
 #include "Settings.h"
-#include <array>
 #include "Entity.h"
+#include <array>
 
 using namespace std;
 

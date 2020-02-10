@@ -38,6 +38,7 @@ void NetworkComponent::preTick()
 		// Setup a new connection
 		_server->component_entity->grabNextAvailablePlayer(newPlayerUID);
 		connections.status[newPlayerUID] = ConnectionStatus::Connected;
+		connections.socket[newPlayerUID].setBlocking(false);
 		printf("NetworkComponent: Client connected! uid=%u\n", newPlayerUID);
 
 		json msg;
@@ -54,30 +55,42 @@ void NetworkComponent::preTick()
 	string messageType;
 	for (Entity::UID uid = 0; uid < NumberOfPlayers; uid++)
 	{
-		if (connections.status[uid] == ConnectionStatus::Disconnected)
-			continue;
-
 		// Grab the packet
-		auto status = connections.socket[uid].receive(packet);
-		if (status == sf::Socket::Status::Disconnected)
+		for (int i = 0; i < 10; i++)
 		{
-			printf("NetworkComponent: Client disconnected uid=%u.\n", uid);
-			connections.status[uid] = ConnectionStatus::Disconnected;
-			_server->component_entity->removeEntity(uid);
-			continue;
-		}
-		else if (status == sf::Socket::Status::Done)
-		{
-			// Convert the packet to json
-			string packetString;
-			packet >> packetString;
-			json j = json::parse(packetString);
-			string message = j["message"];
-			if (message == "move-to-position")
+			auto status = connections.socket[uid].receive(packet);
+			if (status == sf::Socket::Status::Disconnected)
 			{
-				auto& entity = _server->component_entity->getEntity(uid);
-				entity.position.x = j["x"];
-				entity.position.y = j["y"];
+				// Disconnect signal received. Remove the player from the game.
+				if (connections.status[uid] != ConnectionStatus::Disconnected)
+				{
+					connections.status[uid] = ConnectionStatus::Disconnected;
+					printf("NetworkComponent: Client disconnected uid=%u.\n", uid);
+					_server->component_entity->removeEntity(uid);
+				}
+				break;
+			}
+			else if (status == sf::Socket::Status::Done)
+			{
+				if (connections.status[uid] != ConnectionStatus::Connected)
+					continue;
+
+				// Convert the packet to json
+				string packetString;
+				packet >> packetString;
+				json j = json::parse(packetString);
+				string message = j["message"];
+				if (message == "move-to-position")
+				{
+					auto& entity = _server->component_entity->getEntity(uid);
+					entity.position.x = j["x"];
+					entity.position.y = j["y"];
+				}
+				continue;
+			}
+			else
+			{
+				continue;
 			}
 		}
 	}
@@ -105,9 +118,6 @@ Connections::Connections()
 
 void Connections::sendJson(const json& j, const Entity::UID receiver)
 {
-	if (status[receiver] == ConnectionStatus::Disconnected)
-		return;
-
 	// send json through packet
 	sf::Packet packet;
 	packet << j.dump(-1, ' ', true);

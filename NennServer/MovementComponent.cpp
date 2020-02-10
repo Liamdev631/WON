@@ -52,8 +52,8 @@ void MovementComponent::tick()
 		auto& entity = _server->component_entity->getEntity(uid);
 		static float time;
 		time += 0.01f;
-		entity.position.x = 10 + cos(time * 0.2f + uid) * 3.0f;
-		entity.position.y = 10 + sin(time * 0.2f + uid) * 3.0f;
+		entity.position.x = 316 + cos(time * 5.0f + uid) * 1.0f;
+		entity.position.y = 316 + sin(time * 5.0f + uid) * 1.0f;
 		_server->component_entity->setEntityUpdateFlag(uid);
 	}
 }

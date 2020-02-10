@@ -10,7 +10,7 @@ EntityModel::EntityModel(const GameClient* client, scene::ISceneNode* parent, s3
 {
     _mesh = SceneManager->addAnimatedMeshSceneNode(SceneManager->getMesh("../Content/models/sydney.md2"), this);
     _mesh->setScale(vector3df(0.0125f));
-    _mesh->setPosition({0, 0.62f, 0});
+    _mesh->setPosition({0, 0, 0});
     _mesh->setMaterialFlag(video::EMF_LIGHTING, false);
     _mesh->setMaterialTexture(0, SceneManager->getVideoDriver()->getTexture("../Content/models/sydney.bmp"));
     _mesh->setMD2Animation(EMAT_RUN);
