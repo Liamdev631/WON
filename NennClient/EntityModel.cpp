@@ -1,15 +1,48 @@
 #include "EntityModel.h"
-#include <Irrlicht\irrlicht.h>
+#include "GameClient.h"
+#include "GraphicsComponent.h"
+#include "TerrainComponent.h"
 
-EntityModel::EntityModel(ISceneManager* scene)
-	: _scene(scene), _mesh(nullptr), _animator(nullptr)
+using namespace core;
+
+EntityModel::EntityModel(const GameClient* client, scene::ISceneNode* parent, s32 id)
+    : scene::ISceneNode(parent, client->component_graphics->getSceneManager(), id), _mesh(nullptr), _animator(nullptr), _client(client)
 {
-    _mesh = scene->addAnimatedMeshSceneNode(scene->getMesh("../Content/models/sydney.md2"));
-    _animator = scene->createFlyStraightAnimator(core::vector3df(100, 0, 60), core::vector3df(-100, 0, 60), 3500, true);
+    _mesh = SceneManager->addAnimatedMeshSceneNode(SceneManager->getMesh("../Content/models/sydney.md2"), this);
+    _mesh->setScale(vector3df(0.0125f));
+    _mesh->setPosition({0, 0.62f, 0});
+    _mesh->setMaterialFlag(video::EMF_LIGHTING, false);
+    _mesh->setMaterialTexture(0, SceneManager->getVideoDriver()->getTexture("../Content/models/sydney.bmp"));
+    _mesh->setMD2Animation(EMAT_RUN);
 }
 
 EntityModel::~EntityModel()
 {
-    _mesh->drop();
-    _animator->drop();
+    //if (_animator)
+    //    _animator->drop();
+}
+
+void EntityModel::setDestination(float x, float y)
+{
+    vector3df destination = { x, 0, y };
+    _animator = SceneManager->createFlyStraightAnimator(getPosition(), destination, 100);
+    removeAnimators();
+    addAnimator(_animator);
+
+    // Make the model face the direction of movement
+    float dy = getPosition().Z - y;
+    float dx = getPosition().X - x;
+    float angle = core::radToDeg(atan2f(dy, -dx));
+    if (dx != 0 || dy != 0)
+        _mesh->setRotation({ 0, angle, 0 });
+}
+
+void EntityModel::render()
+{
+
+}
+
+void EntityModel::setHeight(float height)
+{
+    _mesh->setPosition({ 0, height + 0.62f, 0 });
 }

@@ -59,6 +59,8 @@ void EntityComponent::grabNextAvailablePlayer(Entity::UID uid)
 	_activePlayers.emplace(uid);
 	Entity& entity = _entityTable[uid];
 	entity.active = true;
+	entity.position.x = float(10 + rand() % 10);
+	entity.position.y = float(10 + rand() % 10);
 }
 
 void EntityComponent::removeEntity(Entity::UID uid)
@@ -121,8 +123,11 @@ void EntityComponent::postTick()
 		// If the entities update flag was set, nearby players need to be sent an entity-update packet
 		if (_entityUpdateFlags[entity])
 		{
-			for (Entity::UID player : _activePlayers)
+			for (Entity::UID player : getActivePlayers())
+			{
 				sendEntityUpdateToPlayer(entity, player);
+				//printf("from:%u to:%u\n", entity, player);
+			}
 		}
 	}
 }

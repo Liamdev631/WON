@@ -4,6 +4,8 @@
 #include "GameStateComponent.h"
 #include "EntityComponent.h"
 #include <Irrlicht\irrlicht.h>
+#include "EntityModel.h"
+#include <Settings.h>
 
 using namespace irr;
 using namespace scene;
@@ -40,8 +42,15 @@ void CameraComponent::tick()
 	if (thisPlayerUID != NO_UID)
 	{
 		// Move the camera to follow the player
-		Entity& thisPlayer = _client->component_entity->getEntity(thisPlayerUID);
-		_cameraNode->setPosition({ thisPlayer.position.x, 5, thisPlayer.position.y });
+		auto thisPlayerModel = _client->component_entity->getEntityModel(thisPlayerUID);
+		if (thisPlayerModel)
+		{
+			vector3df target = thisPlayerModel->getMesh()->getAbsolutePosition();
+			vector3df offset = vector3df(0, sinf(CameraAngle), -cosf(CameraAngle)) * CameraBoomLength;
+			vector3df position = target + offset;
+			_cameraNode->setTarget(target);
+			_cameraNode->setPosition(position);
+		}
 	}
 }
 

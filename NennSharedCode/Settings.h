@@ -17,6 +17,10 @@ constexpr unsigned int NumberOfPlayers = 32;
 constexpr unsigned int NumberOfNPCS = 256;
 constexpr unsigned int NumberOfEntities = NumberOfPlayers + NumberOfNPCS;
 
+// Camera Settings
+const float CameraAngle = 0.5f; // Radians
+const float CameraBoomLength = 2.5f;
+
 // Speed Hacks
 constexpr bool EnableSpeedHackDetection = false;
 constexpr float MaxSpeed = 1.0f;

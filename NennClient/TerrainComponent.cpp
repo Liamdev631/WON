@@ -4,47 +4,27 @@
 #include <Irrlicht\irrlicht.h>
 
 using namespace irr;
-using namespace scene;
 
-TerrainComponent::TerrainComponent(const GameClient* client)
-	: ClientComponent(client), _terrainNode(nullptr)
+constexpr float VerticalScale = 0.4f;
+
+TerrainComponent::TerrainComponent(scene::ISceneNode* parent, scene::ISceneManager* smgr, s32 id)
+	: scene::ISceneNode(parent, smgr, id), _terrainNode(nullptr)
 {
-	auto graphicsComponent = client->component_graphics.get();
-	if (!graphicsComponent)
-	{
-		printf("ERROR: TerrainComponent: GraphicsComponent must be constructed before the TerrainComponent!\n");
-		return;
-	}
-
-	auto smgr = graphicsComponent->getSceneManager();
-	_terrainNode = smgr->addTerrainSceneNode("../Content/heightmaps/overworld.png",
-		nullptr, -1, { 0, 0, 0 }, { 0, 0, 0 }, { 1, 1.0f / 8, 1 }, SColor(255, 255, 255, 255),
-		5, E_TERRAIN_PATCH_SIZE::ETPS_17);
+	_terrainNode = SceneManager->addTerrainSceneNode("../Content/heightmaps/overworld.png",
+		this, -1, { 0, 0, 0 }, { 0, 0, 0 }, { 1, VerticalScale, 1 }, SColor(255, 255, 255, 255),
+		5, E_TERRAIN_PATCH_SIZE::ETPS_33, 4);
 	if (_terrainNode)
 	{
-		auto grassTexture = graphicsComponent->getVideoDriver()->getTexture("../Content/textures/terrain/meadow_grass.png");
-		_terrainNode->setMaterialFlag(EMF_LIGHTING, false);
+		auto grassTexture = SceneManager->getVideoDriver()->getTexture("../Content/textures/terrain/meadow_grass.png");
+		auto detailTexture = SceneManager->getVideoDriver()->getTexture("../Content/textures/terrain/detail.png");
 		_terrainNode->setMaterialTexture(0, grassTexture);
-		_terrainNode->scaleTexture(512);
+		_terrainNode->setMaterialTexture(1, detailTexture);
+		_terrainNode->setMaterialFlag(EMF_LIGHTING, true);
+		_terrainNode->scaleTexture(256, 32);
 	}
 }
 
 TerrainComponent::~TerrainComponent()
-{
-
-}
-
-void TerrainComponent::preTick()
-{
-
-}
-
-void TerrainComponent::tick()
-{
-
-}
-
-void TerrainComponent::postTick()
 {
 
 }

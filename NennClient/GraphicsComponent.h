@@ -1,6 +1,7 @@
-#pragma once 
-#include "ClientComponent.h"
+#pragma once
 #include <Irrlicht\irrlicht.h>
+#include "ClientComponent.h"
+
 
 using namespace irr;
 using namespace core;
@@ -10,6 +11,9 @@ using namespace io;
 using namespace gui;
 
 class GameClient;
+class TerrainComponent;
+class Water;
+class Lighting;
 
 class GraphicsComponent : public ClientComponent
 {
@@ -18,6 +22,10 @@ private:
 	IVideoDriver* _driver;
 	ISceneManager* _sceneManager;
 	IGUIEnvironment* _gui;
+
+	TerrainComponent* _terrain;
+	Water* _water;
+	Lighting* _lighting;
 
 public:
 	GraphicsComponent(const GameClient* client);
@@ -31,5 +39,9 @@ public:
 	IVideoDriver* getVideoDriver() const;
 	ISceneManager* getSceneManager() const;
 	IGUIEnvironment* getGUI() const;
+
+	TerrainComponent* getTerrainComponent() const;
+	Water* getWater() const;
+	Lighting* getLighting() const;
 };
 

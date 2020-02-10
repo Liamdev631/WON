@@ -47,9 +47,6 @@
     <ClInclude Include="MovementComponent.h">
       <Filter>Header Files\GameComponent</Filter>
     </ClInclude>
-    <ClInclude Include="Components.h">
-      <Filter>Header Files\GameComponent</Filter>
-    </ClInclude>
     <ClInclude Include="ServerComponent.h">
       <Filter>Header Files\GameComponent</Filter>
     </ClInclude>

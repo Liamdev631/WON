@@ -38,62 +38,67 @@ void NetworkComponent::preTick()
 void NetworkComponent::tick()
 {
 	sf::Packet packet;
-	sf::Socket::Status currentNetStatus = _socket.receive(packet);
-	switch (currentNetStatus)
+	for (int i = 0; i < 10; i++)
 	{
-		case sf::Socket::Status::Disconnected:
+		sf::Socket::Status currentNetStatus = _socket.receive(packet);
+		switch (currentNetStatus)
 		{
-			if (_connectionStatus == ConnectionStatus::Disconnected)
+			case sf::Socket::Status::Disconnected:
+			{
+				if (_connectionStatus == ConnectionStatus::Disconnected)
+					break;
+				_connectionStatus = ConnectionStatus::Disconnected;
+				printf("NetworkComponent: Disconnected from the server!\n");
 				break;
-			_connectionStatus = ConnectionStatus::Disconnected;
-			printf("NetworkComponent: Disconnected from the server!\n");
-			break;
-		}
+			}
 
-		case sf::Socket::Status::Done:
-		{
-			_connectionStatus = ConnectionStatus::Connected;
-			string s;
-			packet >> s;
-			json j = json::parse(s);
-			string message = j["message"];
-			
-			// Determine which type of message to decode
-			if (message == "hello-player")
+			case sf::Socket::Status::Done:
 			{
-				const Entity::UID uid = j["uid"];
-				_client->component_gameState->thisPlayersUID = uid;
-				printf("NetworkComponent: You have been assigned uid %u\n", uid);
-				break;
-			}
-			else if (message == "entity-update")
-			{
-				const Entity::UID uid = j["uid"];
-				const float x = j["x"];
-				const float y = j["y"];
-				//printf("NetworkComponent: Entity %u moved to (%f, %f)\n", uid, x, y);
-				auto& entity = _client->component_entity->getEntity(uid);
-				entity.position = { x, y };
-				break;
-			}
-			else
-			{
-				printf("%s\n", message.c_str());
-				break;
-			}
-			/*else if (message == "entity-removed")
-			{
-				const Entity::UID uid = j["uid"];
-				printf("NetworkComponent: Entity %u removed\n", uid);
-				_client->component_entity->removeEntity(uid);
-				break;
-			}
-			else
-				break;*/
-		}
+				_connectionStatus = ConnectionStatus::Connected;
+				string s;
+				packet >> s;
+				json j = json::parse(s);
+				string message = j["message"];
 
-		default:
-			break;
+				// Determine which type of message to decode
+				if (message == "hello-player")
+				{
+					const Entity::UID uid = j["uid"];
+					_client->component_gameState->thisPlayersUID = uid;
+					printf("NetworkComponent: You have been assigned uid %u\n", uid);
+					break;
+				}
+				else if (message == "entity-update")
+				{
+					const Entity::UID uid = j["uid"];
+					const float x = j["x"];
+					const float y = j["y"];
+					//printf("NetworkComponent: Entity %u moved to (%f, %f)\n", uid, x, y);
+					auto& entity = _client->component_entity->getEntity(uid);
+					entity.position = { x, y };
+					printf("%u\n", uid);
+
+					break;
+				}
+				else
+				{
+					printf("%s\n", message.c_str());
+					break;
+				}
+				/*else if (message == "entity-removed")
+				{
+					const Entity::UID uid = j["uid"];
+					printf("NetworkComponent: Entity %u removed\n", uid);
+					_client->component_entity->removeEntity(uid);
+					break;
+				}
+				else
+					break;*/
+			}
+
+			default:
+				break;
+		}
 	}
 
 }

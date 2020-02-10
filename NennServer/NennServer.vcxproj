@@ -26,7 +26,6 @@
     <ClCompile Include="NetworkComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Components.h" />
     <ClInclude Include="EntityComponent.h" />
     <ClInclude Include="GameServer.h" />
     <ClInclude Include="MovementComponent.h" />

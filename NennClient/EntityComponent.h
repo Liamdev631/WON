@@ -5,16 +5,17 @@
 #include <map>
 #include <memory>
 #include <set>
-#include "EntityModel.h"
 
 using namespace std;
+
+class EntityModel;
 
 class EntityComponent : public ClientComponent
 {
 private:
 	std::map<Entity::UID, Entity> _entityTable;
+	std::map<Entity::UID, EntityModel*> _entityModels;
 	set<Entity::UID> _activeEntities;
-	std::map<Entity::UID, unique_ptr<EntityModel>> _entityModels;
 	
 public:
 
@@ -27,6 +28,7 @@ public:
 
 	Entity& getEntity(Entity::UID entity);
 	void removeEntity(Entity::UID entity);
+	EntityModel* getEntityModel(Entity::UID entity);
 
 	const set<Entity::UID>& getActiveEntities() const;
 };

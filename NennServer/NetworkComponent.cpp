@@ -71,7 +71,14 @@ void NetworkComponent::preTick()
 			// Convert the packet to json
 			string packetString;
 			packet >> packetString;
-			json msg = json::parse(packetString);
+			json j = json::parse(packetString);
+			string message = j["message"];
+			if (message == "move-to-position")
+			{
+				auto& entity = _server->component_entity->getEntity(uid);
+				entity.position.x = j["x"];
+				entity.position.y = j["y"];
+			}
 		}
 	}
 }
@@ -104,7 +111,7 @@ void Connections::sendJson(const json& j, const Entity::UID receiver)
 	// send json through packet
 	sf::Packet packet;
 	packet << j.dump(-1, ' ', true);
-	socket[receiver].send(packet);
+		socket[receiver].send(packet);
 	return;
 }
 
@@ -114,8 +121,7 @@ void Connections::sendJson(const json& j, const set<Entity::UID> receivers)
 	sf::Packet packet;
 	packet << j.dump(-1, ' ', true);
 	for (const Entity::UID player : receivers)
-		if (status[player] != ConnectionStatus::Disconnected)
-			socket[player].send(packet);
+		socket[player].send(packet);
 	return;
 }
 

@@ -1,19 +1,33 @@
 #pragma once
-#include "ClientComponent.h"
-#include "Irrlicht\ITerrainSceneNode.h"
+#include <Irrlicht\irrlicht.h>
 
-using namespace irr::scene;
+using namespace irr;
 
-class TerrainComponent : public ClientComponent
+class TerrainComponent : public scene::ISceneNode
 {
 private:
-	ITerrainSceneNode* _terrainNode;
+	scene::ITerrainSceneNode* _terrainNode;
 
 public:
-	TerrainComponent(const GameClient* client);
+	TerrainComponent(scene::ISceneNode* parent, scene::ISceneManager* smgr, s32 id = -1);
 	~TerrainComponent();
 
-	void preTick() override;
-	void tick() override;
-	void postTick() override;
+	virtual void render()
+	{
+		for (auto& child : getChildren())
+			child->render();
+	}
+
+	virtual const core::aabbox3d<f32>& getBoundingBox() const
+	{
+		if (_terrainNode)
+			return _terrainNode->getBoundingBox();
+		static auto bb = core::aabbox3df(0, 0, 0, 0, 0, 0);
+		return bb;
+	}
+
+	scene::ITerrainSceneNode* getNode() const
+	{
+		return _terrainNode;
+	}
 };

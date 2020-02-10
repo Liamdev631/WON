@@ -36,16 +36,10 @@
     <ClCompile Include="NetworkComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
-    <ClCompile Include="GraphicsComponent.cpp">
-      <Filter>Source Files\Components\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="CameraComponent.cpp">
       <Filter>Source Files\Components\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="TerrainComponent.cpp">
-      <Filter>Source Files\Components\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="GameStateComponent.cpp">
       <Filter>Source Files\Components\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="EntityComponent.cpp">
@@ -54,8 +48,20 @@
     <ClCompile Include="UserInputComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
+    <ClCompile Include="GraphicsComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GameStateComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
     <ClCompile Include="EntityModel.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Components\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Lighting.cpp">
+      <Filter>Source Files\Components\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Water.cpp">
+      <Filter>Source Files\Components\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -68,16 +74,10 @@
     <ClInclude Include="ClientComponent.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="GraphicsComponent.h">
-      <Filter>Header Files\Components\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="CameraComponent.h">
       <Filter>Header Files\Components\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="TerrainComponent.h">
-      <Filter>Header Files\Components\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="GameStateComponent.h">
       <Filter>Header Files\Components\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="EntityComponent.h">
@@ -89,8 +89,20 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GameStateComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
     <ClInclude Include="EntityModel.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Components\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Lighting.h">
+      <Filter>Header Files\Components\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Water.h">
+      <Filter>Header Files\Components\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
