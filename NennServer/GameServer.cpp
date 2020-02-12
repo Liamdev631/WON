@@ -28,12 +28,12 @@ GameServer::~GameServer()
 
 void GameServer::tick()
 {
-	static int tick = 0;
+	/*static int tick = 0;
 	printf("tick\n");
 	json j;
 	j["message"] = "print-string";
 	j["string"] = "tick " + std::to_string(tick++);
-	component_network->connections.sendJson(j, component_entity->getActivePlayers());
+	component_network->connections.sendJson(j, component_entity->getActivePlayers());*/
 
 	for (auto c : _components)
 		c->preTick();

@@ -44,6 +44,7 @@ public:
 	~NetworkComponent();
 
 	void preTick() override;
+	sf::Socket::Status readMessageFromConnection(const Entity::UID& uid);
 	void tick() override;
 	void postTick() override;
 };

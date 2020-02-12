@@ -14,6 +14,7 @@ class GameClient;
 class TerrainComponent;
 class Water;
 class Lighting;
+class Input;
 
 class GraphicsComponent : public ClientComponent
 {

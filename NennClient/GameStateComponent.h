@@ -10,6 +10,7 @@ class GameStateComponent : public ClientComponent
 public:
 	Entity::UID thisPlayersUID;
 	EntityModel* thisPlayersModel;
+	Entity* thisPlayersEntity;
 
 	GameStateComponent(const GameClient* client);
 	~GameStateComponent();

@@ -52,15 +52,16 @@ Entity::UID EntityComponent::grabNextAvailableNPC()
 	return uid;
 }
 
-void EntityComponent::grabNextAvailablePlayer(Entity::UID uid)
+Entity& EntityComponent::initializePlayer(Entity::UID uid)
 {
 	assert(uid < NumberOfPlayers);
 	_activeEntities.emplace(uid);
 	_activePlayers.emplace(uid);
 	Entity& entity = _entityTable[uid];
 	entity.active = true;
-	entity.position.x = float(10 + rand() % 10);
-	entity.position.y = float(10 + rand() % 10);
+	entity.position.x = float(316 + rand() % 5);
+	entity.position.y = float(316 + rand() % 5);
+	return entity;
 }
 
 void EntityComponent::removeEntity(Entity::UID uid)
@@ -79,7 +80,7 @@ void EntityComponent::removeEntity(Entity::UID uid)
 		_activePlayers.erase(uid);
 }
 
-void EntityComponent::setupNewEntity(Entity::UID uid)
+void EntityComponent::broadcastEntityUpdate(Entity::UID uid)
 {
 	if (isPlayer(uid))
 	{

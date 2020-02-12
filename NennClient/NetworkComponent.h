@@ -1,7 +1,9 @@
 #pragma once
 #include "ClientComponent.h"
 #include <SFML\Network.hpp>
+#include <json.hpp>
 
+using namespace nlohmann;
 
 enum struct ConnectionStatus
 {
@@ -23,5 +25,7 @@ public:
 	void preTick() override;
 	void tick() override;
 	void postTick() override;
+
+	void sendJson(json& j);
 };
 

@@ -64,7 +64,13 @@ void NetworkComponent::tick()
 				if (message == "hello-player")
 				{
 					const Entity::UID uid = j["uid"];
+					const float x = j["x"];
+					const float y = j["y"];
 					_client->component_gameState->thisPlayersUID = uid;
+					Entity& playerEntity = _client->component_entity->getEntity(uid);
+					_client->component_gameState->thisPlayersEntity = &playerEntity;
+					playerEntity.position.x = x;
+					playerEntity.position.y = y;
 					printf("NetworkComponent: You have been assigned uid %u\n", uid);
 					break;
 				}
@@ -74,8 +80,11 @@ void NetworkComponent::tick()
 					const float x = j["x"];
 					const float y = j["y"];
 					//printf("NetworkComponent: Entity %u moved to (%f, %f)\n", uid, x, y);
-					auto& entity = _client->component_entity->getEntity(uid);
-					entity.position = { x, y };
+					if (uid != _client->component_gameState->thisPlayersUID)
+					{
+						auto& entity = _client->component_entity->getEntity(uid);
+						entity.position = { x, y };
+					}
 					//printf("%u\n", uid);
 
 					break;
@@ -111,4 +120,11 @@ void NetworkComponent::tick()
 void NetworkComponent::postTick()
 {
 
+}
+
+void NetworkComponent::sendJson(json& j)
+{
+	sf::Packet packet;
+	packet << j.dump(-1, ' ', true);;
+	_socket.send(packet);
 }

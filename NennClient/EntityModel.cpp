@@ -32,9 +32,11 @@ void EntityModel::setDestination(float x, float y)
     // Make the model face the direction of movement
     float dy = getPosition().Z - y;
     float dx = getPosition().X - x;
-    float angle = core::radToDeg(atan2f(dy, -dx));
     if (dx != 0 || dy != 0)
+    {
+        float angle = core::radToDeg(atan2f(dy, -dx));
         _mesh->setRotation({ 0, angle, 0 });
+    }
 }
 
 void EntityModel::render()

@@ -47,7 +47,7 @@ void MovementComponent::tick()
 	}
 
 	// Test move
-	for (Entity::UID uid : _server->component_entity->getActiveEntities())
+	/*for (Entity::UID uid : _server->component_entity->getActiveEntities())
 	{
 		auto& entity = _server->component_entity->getEntity(uid);
 		static float time;
@@ -55,7 +55,7 @@ void MovementComponent::tick()
 		entity.position.x = 316 + cos(time * 5.0f + uid) * 1.0f;
 		entity.position.y = 316 + sin(time * 5.0f + uid) * 1.0f;
 		_server->component_entity->setEntityUpdateFlag(uid);
-	}
+	}*/
 }
 
 void MovementComponent::postTick()

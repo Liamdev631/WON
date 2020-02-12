@@ -36,10 +36,10 @@ public:
 	bool isPlayer(Entity::UID uid) const;
 	
 	// Entity management functions
-	void grabNextAvailablePlayer(Entity::UID uid);
+	Entity& initializePlayer(Entity::UID uid);
 	Entity::UID grabNextAvailableNPC();
 	void removeEntity(Entity::UID uid);
-	void setupNewEntity(Entity::UID uid);
+	void broadcastEntityUpdate(Entity::UID uid);
 	
 	// Network functions
 	void sendPlayerUID(Entity::UID uid);

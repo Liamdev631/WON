@@ -26,9 +26,9 @@ public:
 	void tick() override;
 	void postTick() override;
 
-	Entity& getEntity(Entity::UID entity);
-	void removeEntity(Entity::UID entity);
-	EntityModel* getEntityModel(Entity::UID entity);
+	Entity& getEntity(Entity::UID uid);
+	void removeEntity(Entity::UID uid);
+	EntityModel* getEntityModel(Entity::UID uid);
 
 	const set<Entity::UID>& getActiveEntities() const;
 };

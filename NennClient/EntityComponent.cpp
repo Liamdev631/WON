@@ -2,7 +2,12 @@
 #include "GameClient.h"
 #include "GraphicsComponent.h"
 #include "TerrainComponent.h"
+#include "GameStateComponent.h"
 #include "EntityModel.h"
+#include <json.hpp>
+#include "NetworkComponent.h"
+
+using namespace nlohmann;
 
 EntityComponent::EntityComponent(const GameClient* client)
 	: ClientComponent(client)
@@ -17,13 +22,19 @@ EntityComponent::~EntityComponent()
 
 void EntityComponent::preTick()
 {
-
+	for (Entity::UID uid : getActiveEntities())
+	{
+		_entityTable[uid].lastPosition = _entityTable[uid].position;
+	}
 }
 
 void EntityComponent::tick()
 {
+	//Entity::UID thisPlayersUID = _client->component_gameState->thisPlayersUID();
 	for (auto& uid : _activeEntities)
 	{
+		//if (uid == thisPlayersUID)
+
 		auto& entityModel = _entityModels[uid];
 		auto destination = _entityTable[uid].position;
 		entityModel->setDestination(destination.x, destination.y);
@@ -38,7 +49,19 @@ void EntityComponent::tick()
 
 void EntityComponent::postTick()
 {
-
+	auto thisPlayerEntity = _client->component_gameState->thisPlayersEntity;
+	if (thisPlayerEntity)
+	{
+		if (thisPlayerEntity->position != thisPlayerEntity->lastPosition)
+		{
+			// If we moved the player, relay it to the server
+			json j;
+			j["message"] = "move-to-position";
+			j["x"] = thisPlayerEntity->position.x;
+			j["y"] = thisPlayerEntity->position.y;
+			_client->component_network->sendJson(j);
+		}
+	}
 }
 
 Entity& EntityComponent::getEntity(Entity::UID uid)
@@ -76,4 +99,3 @@ EntityModel* EntityComponent::getEntityModel(Entity::UID uid)
 		auto e = getEntity(uid); // TODO: This is bad
 	return _entityModels[uid];
 }
-

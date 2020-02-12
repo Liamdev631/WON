@@ -36,64 +36,81 @@ void NetworkComponent::preTick()
 	while (_listener.accept(connections.socket[newPlayerUID]) == sf::TcpSocket::Status::Done)
 	{
 		// Setup a new connection
-		_server->component_entity->grabNextAvailablePlayer(newPlayerUID);
+		auto& playerEntity = _server->component_entity->initializePlayer(newPlayerUID);
 		connections.status[newPlayerUID] = ConnectionStatus::Connected;
 		connections.socket[newPlayerUID].setBlocking(false);
 		printf("NetworkComponent: Client connected! uid=%u\n", newPlayerUID);
+		_server->component_entity->broadcastEntityUpdate(newPlayerUID);
 
 		json msg;
 		msg["message"] = "hello-player";
 		msg["uid"] = newPlayerUID;
+		msg["x"] = playerEntity.position.x;
+		msg["y"] = playerEntity.position.y;
 		connections.sendJson(msg, newPlayerUID);
-		_server->component_entity->setupNewEntity(newPlayerUID);
 
 		newPlayerUID = getNextSocket(connections);
 	}
 
 	// Recieve packets from all connected users
-	sf::Packet packet;
-	string messageType;
-	for (Entity::UID uid = 0; uid < NumberOfPlayers; uid++)
+	for (Entity::UID uid : _server->component_entity->getActivePlayers())
 	{
-		// Grab the packet
-		for (int i = 0; i < 10; i++)
-		{
-			auto status = connections.socket[uid].receive(packet);
-			if (status == sf::Socket::Status::Disconnected)
-			{
-				// Disconnect signal received. Remove the player from the game.
-				if (connections.status[uid] != ConnectionStatus::Disconnected)
-				{
-					connections.status[uid] = ConnectionStatus::Disconnected;
-					printf("NetworkComponent: Client disconnected uid=%u.\n", uid);
-					_server->component_entity->removeEntity(uid);
-				}
-				break;
-			}
-			else if (status == sf::Socket::Status::Done)
-			{
-				if (connections.status[uid] != ConnectionStatus::Connected)
-					continue;
-
-				// Convert the packet to json
-				string packetString;
-				packet >> packetString;
-				json j = json::parse(packetString);
-				string message = j["message"];
-				if (message == "move-to-position")
-				{
-					auto& entity = _server->component_entity->getEntity(uid);
-					entity.position.x = j["x"];
-					entity.position.y = j["y"];
-				}
-				continue;
-			}
-			else
-			{
-				continue;
-			}
-		}
+		while (readMessageFromConnection(uid) == sf::Socket::Status::Done) {  }
 	}
+}
+
+sf::Socket::Status NetworkComponent::readMessageFromConnection(const Entity::UID& uid)
+{
+	sf::Packet packet;
+	auto status = connections.socket[uid].receive(packet);
+	//printf("%u", status);
+	switch (status)
+	{
+		case sf::Socket::Status::NotReady:
+		{
+			break;
+		}
+
+		case sf::Socket::Status::Disconnected:
+		{
+			// Disconnect signal received. Remove the player from the game.
+			if (connections.status[uid] == ConnectionStatus::Disconnected)
+				break;
+			connections.status[uid] = ConnectionStatus::Disconnected;
+			printf("NetworkComponent: Client disconnected uid=%u.\n", uid);
+			_server->component_entity->removeEntity(uid);
+			break;
+		}
+
+		case sf::Socket::Status::Done:
+		{
+			if (packet.getDataSize() > 0)
+				connections.status[uid] = ConnectionStatus::Connected;
+			else
+				break;
+
+			string s;
+			packet >> s;
+			json j = json::parse(s);
+
+			string message = j["message"];
+			if (message == "move-to-position")
+			{
+				auto& entity = _server->component_entity->getEntity(uid);
+				const float x = j["x"];
+				const float y = j["y"];
+				entity.position = { x, y };
+				printf("%f, %f\n", x, y);
+				_server->component_entity->setEntityUpdateFlag(uid);
+			}
+
+			break;
+		}
+
+		default:
+			break;
+	}
+	return status;
 }
 
 void NetworkComponent::tick()
