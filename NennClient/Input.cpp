@@ -4,6 +4,8 @@
 #include "EntityModel.h"
 #include "EntityComponent.h"
 #include "ClientComponent.h"
+#include "GraphicsComponent.h"
+#include "CameraComponent.h"
 
 Input::Input(const GameClient* client)
     : IEventReceiver(), _client(client)
@@ -14,8 +16,49 @@ Input::Input(const GameClient* client)
 
 bool Input::OnEvent(const SEvent& event)
 {
-    if (event.EventType == irr::EET_KEY_INPUT_EVENT)
-        _keyIsDown[event.KeyInput.Key] = event.KeyInput.PressedDown;
+    switch (event.EventType)
+    {
+        case irr::EET_KEY_INPUT_EVENT:
+        {
+            _keyIsDown[event.KeyInput.Key] = event.KeyInput.PressedDown;
+
+            switch (event.KeyInput.Key)
+            {
+                case KEY_ESCAPE:
+                    exit(0);
+                    break;
+            }
+
+            break;
+        }
+
+        case irr::EET_MOUSE_INPUT_EVENT:
+        {
+            switch (event.MouseInput.Event)
+            {
+                case EMIE_LMOUSE_PRESSED_DOWN:
+                    MouseState.LeftButtonDown = true;
+                    break;
+
+                case EMIE_LMOUSE_LEFT_UP:
+                    MouseState.LeftButtonDown = false;
+                    break;
+
+                case EMIE_MOUSE_MOVED:
+                    MouseState.Position.X = event.MouseInput.X;
+                    MouseState.Position.Y = event.MouseInput.Y;
+                    break;
+
+                default:
+                    break;
+            }
+            break;
+        }
+
+        default:
+            break;
+    }
+
     return false;
 }
 
@@ -37,23 +80,51 @@ void InputComponent::preTick()
 
 void InputComponent::tick()
 {
-    float moveSpeed = 0.05f;
-    float dt = 1;
     auto thisPlayersEntity = _client->component_gameState->thisPlayersEntity;
     if (thisPlayersEntity)
     {
-        if (input.IsKeyDown(KEY_KEY_D))
-            thisPlayersEntity->position.x += moveSpeed * dt;
-        if (input.IsKeyDown(KEY_KEY_A))
-            thisPlayersEntity->position.x -= moveSpeed * dt;
-        if (input.IsKeyDown(KEY_KEY_W))
-            thisPlayersEntity->position.y += moveSpeed * dt;
-        if (input.IsKeyDown(KEY_KEY_S))
-            thisPlayersEntity->position.y -= moveSpeed * dt;
+        // Move the player model with user input
+        float moveSpeed = 0.02f;
+        float dt = 1;
+
+        auto thisPlayersModel = _client->component_gameState->thisPlayersModel;
+        if (thisPlayersModel)
+        {
+            vec2f moveAmount = { 0, 0 };
+            if (input.IsKeyDown(KEY_KEY_D))
+                moveAmount.x += 1;
+            if (input.IsKeyDown(KEY_KEY_A))
+                moveAmount.x -= 1;
+            if (input.IsKeyDown(KEY_KEY_W))
+                moveAmount.y += 1;
+            if (input.IsKeyDown(KEY_KEY_S))
+                moveAmount.y -= 1;
+            moveAmount = moveAmount * moveSpeed * dt;
+            float theta = (_client->component_camera->Direction + 90) * PI / 180;
+            vec2f rotatedMove;
+            rotatedMove.x = (moveAmount.x * cos(theta)) + (moveAmount.y * sin(theta));
+            rotatedMove.y = (moveAmount.x * -sin(theta)) + (moveAmount.y * cos(theta));
+            thisPlayersModel->move(rotatedMove);
+        }
     }
 }
 
 void InputComponent::postTick()
 {
 
+}
+
+MousePos Input::getMouseCenter()
+{
+    auto size = _client->component_graphics->getDriver()->getScreenSize();
+    MousePos pos;
+    pos.X = size.Width / 2;
+    pos.Y = size.Height / 2;
+    return pos;
+}
+
+void Input::recenterMouse()
+{
+    auto cursor = _client->component_graphics->getDevice()->getCursorControl();
+    cursor->setPosition(getMouseCenter());
 }

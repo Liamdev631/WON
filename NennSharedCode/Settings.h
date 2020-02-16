@@ -18,8 +18,9 @@ constexpr unsigned int NumberOfNPCS = 256;
 constexpr unsigned int NumberOfEntities = NumberOfPlayers + NumberOfNPCS;
 
 // Camera Settings
-const float CameraAngle = 0.5f; // Radians
-const float CameraBoomLength = 2.5f;
+constexpr int MinCameraAngle = 15; // Degrees
+constexpr float CameraBoomLength = 0.8f;
+constexpr int TurnSensitivity = 100;
 
 // Speed Hacks
 constexpr bool EnableSpeedHackDetection = false;

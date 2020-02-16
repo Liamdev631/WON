@@ -30,30 +30,25 @@ void EntityComponent::preTick()
 
 void EntityComponent::tick()
 {
-	//Entity::UID thisPlayersUID = _client->component_gameState->thisPlayersUID();
+	Entity::UID thisPlayersUID = _client->component_gameState->thisPlayersUID;
 	for (auto& uid : _activeEntities)
 	{
-		//if (uid == thisPlayersUID)
-
-		auto& entityModel = _entityModels[uid];
-		auto destination = _entityTable[uid].position;
-		entityModel->setDestination(destination.x, destination.y);
-		auto terrainNode = _client->component_graphics->getTerrainComponent()->getNode();
-
-		// Set each characters height to the height of the terrain
-		vector3df currentPos = entityModel->getPosition();
-		float height = terrainNode->getHeight(currentPos.X, currentPos.Z);
-		entityModel->setHeight(height);
+		_entityModels[uid]->update();
 	}
 }
 
 void EntityComponent::postTick()
 {
+
 	auto thisPlayerEntity = _client->component_gameState->thisPlayersEntity;
 	if (thisPlayerEntity)
 	{
-		if (thisPlayerEntity->position != thisPlayerEntity->lastPosition)
+		auto thisPlayersModel = _client->component_gameState->thisPlayersModel;
+		vec2f pos = { thisPlayersModel->getAbsolutePosition().X, thisPlayersModel->getAbsolutePosition().Z };
+		if (thisPlayerEntity->position != pos)
 		{
+			thisPlayerEntity->position = pos;
+			
 			// If we moved the player, relay it to the server
 			json j;
 			j["message"] = "move-to-position";
@@ -75,7 +70,7 @@ Entity& EntityComponent::getEntity(Entity::UID uid)
 
 		// Create the EntityModel for this entity
 		auto smgr = _client->component_graphics->getSceneManager();
-		_entityModels[uid] = new EntityModel(_client, smgr->getRootSceneNode());
+		_entityModels[uid] = new EntityModel(uid, _client, smgr->getRootSceneNode());
 		_entityModels[uid]->drop();
 	}
 	return entity;

@@ -12,24 +12,27 @@ GraphicsComponent::GraphicsComponent(const GameClient* client)
 	_gui(nullptr), _terrain(nullptr), _lighting(nullptr), _water(nullptr)
 {
 	SIrrlichtCreationParameters params;
-	params.AntiAlias = 8;
+	params.AntiAlias = 16;
 	params.Fullscreen = false;
 	params.DriverType = EDT_OPENGL;
-	_device = createDevice(video::EDT_OPENGL, dimension2d<u32>(640, 480), 24, false, false, true, &_client->component_input->input);
+	params.Vsync = true;
+	params.Doublebuffer = true;
+	params.Bits = 24;
+	params.EventReceiver = &_client->component_input->input;
+	_device = createDeviceEx(params);
 	if (!_device)
 		return;
-	_device->setWindowCaption(L"World of Nenn");
+	
 	_driver = _device->getVideoDriver();
 	_sceneManager = _device->getSceneManager();
 	_gui = _device->getGUIEnvironment();
 
 	_terrain = new TerrainComponent(_sceneManager->getRootSceneNode(), _sceneManager);
-
-	_water = new Water(_sceneManager->getRootSceneNode(), _sceneManager);
-
 	_lighting = new Lighting(_sceneManager->getRootSceneNode(), _sceneManager);
+	//_water = new Water(_sceneManager->getRootSceneNode(), _sceneManager);
 
-	//_gui->addStaticText(L"Hello World! This is the Irrlicht Software renderer!", rect<s32>(10, 10, 260, 22), true);
+	_device->getCursorControl()->setVisible(false);
+	_device->setWindowCaption(L"World of Nenn");
 }
 
 GraphicsComponent::~GraphicsComponent()
@@ -47,6 +50,8 @@ void GraphicsComponent::tick()
 	// All the scene rendering happens here.
 	if (!_device->run())
 		return;
+	if (!_device->isWindowActive())
+		return;
 	_driver->beginScene(true, true, SColor(255, 0, 0, 255));
 	_sceneManager->drawAll();
 	_gui->drawAll();
@@ -63,7 +68,7 @@ IrrlichtDevice* GraphicsComponent::getDevice() const
 	return _device;
 }
 
-IVideoDriver* GraphicsComponent::getVideoDriver() const
+IVideoDriver* GraphicsComponent::getDriver() const
 {
 	return _driver;
 }

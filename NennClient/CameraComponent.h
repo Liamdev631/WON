@@ -10,6 +10,9 @@ private:
 	ICameraSceneNode* _cameraNode;
 
 public:
+	float Direction;
+	float ZDirection;
+
 	CameraComponent(const GameClient* client);
 	~CameraComponent();
 

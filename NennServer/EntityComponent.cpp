@@ -12,6 +12,18 @@ EntityComponent::EntityComponent(const GameServer* server)
 	for (unsigned int i = 0; i < NumberOfPlayers; i++)
 		_timeoutTable[i] = 0;
 	clearUpdateFlags();
+
+	// Load a few npcs
+	if (false)
+	{
+		for (int i = 0; i < NumberOfNPCS; i++)
+		{
+			Entity::UID uid = grabNextAvailableNPC();
+			Entity& entity = getEntity(uid);
+			entity.position.x = 256;// 310 + (rand() % 500) / 100.0f;
+			entity.position.y = 256;// 320 + (rand() % 500) / 100.0f;
+		}
+	}
 }
 
 void EntityComponent::clearUpdateFlags()
@@ -59,8 +71,8 @@ Entity& EntityComponent::initializePlayer(Entity::UID uid)
 	_activePlayers.emplace(uid);
 	Entity& entity = _entityTable[uid];
 	entity.active = true;
-	entity.position.x = float(316 + rand() % 5);
-	entity.position.y = float(316 + rand() % 5);
+	entity.position.x = 256;// float(316 + rand() % 5);
+	entity.position.y = 256;// float(316 + rand() % 5);
 	return entity;
 }
 

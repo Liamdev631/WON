@@ -37,7 +37,7 @@ public:
 	void postTick() override;
 
 	IrrlichtDevice* getDevice() const;
-	IVideoDriver* getVideoDriver() const;
+	IVideoDriver* getDriver() const;
 	ISceneManager* getSceneManager() const;
 	IGUIEnvironment* getGUI() const;
 

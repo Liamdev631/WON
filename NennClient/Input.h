@@ -6,6 +6,8 @@ using namespace irr;
 
 class GameClient;
 
+typedef core::position2di MousePos;
+
 class Input : public IEventReceiver
 {
 private:
@@ -15,6 +17,13 @@ private:
     bool _keyIsDown[KEY_KEY_CODES_COUNT];
 
 public:
+    struct SMouseState
+    {
+        MousePos Position;
+        bool LeftButtonDown;
+        SMouseState() : LeftButtonDown(false) { }
+    } MouseState, PreviousMouseState;
+
     Input(const GameClient* client);
 
     // This is the one method that we have to implement
@@ -22,6 +31,9 @@ public:
 
     // This is used to check whether a key is being held down
     virtual bool IsKeyDown(EKEY_CODE keyCode) const;
+
+    MousePos getMouseCenter();
+    void recenterMouse();
 };
 
 class InputComponent : public ClientComponent

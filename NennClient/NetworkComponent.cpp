@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <json.hpp>
+#include "EntityModel.h"
 
 using namespace std;
 using namespace nlohmann;
@@ -92,14 +93,14 @@ void NetworkComponent::tick()
 				else if (message == "print-string")
 				{
 					string str = j["string"];
+					auto thisPlayersModel = _client->component_gameState->thisPlayersModel;
+					if (thisPlayersModel)
+					{
+						thisPlayersModel->printText(wstring(str.begin(), str.end()));
+					}
 					printf("PRINT: %s\n", str.c_str());
 				}
-				else
-				{
-					printf("Unimplemented message type: '%s'\n", message.c_str());
-					break;
-				}
-				/*else if (message == "entity-removed")
+				else if (message == "entity-removed")
 				{
 					const Entity::UID uid = j["uid"];
 					printf("NetworkComponent: Entity %u removed\n", uid);
@@ -107,7 +108,10 @@ void NetworkComponent::tick()
 					break;
 				}
 				else
-					break;*/
+				{
+					printf("Unimplemented message type: '%s'\n", message.c_str());
+					break;
+				}
 			}
 
 			default:

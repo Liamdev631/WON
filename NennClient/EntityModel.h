@@ -1,7 +1,11 @@
 #pragma once
 #include <Irrlicht\irrlicht.h>
+#include <string>
+#include <Entity.h>
 
+using namespace std;
 using namespace irr;
+
 class GameClient;
 
 class EntityModel : public scene::ISceneNode
@@ -12,10 +16,14 @@ private:
 	const GameClient* _client;
 
 public:
-	EntityModel(const GameClient* client, scene::ISceneNode* parent, s32 id = -1);
+	Entity::UID uid;
+
+	EntityModel(Entity::UID uid, const GameClient* client, scene::ISceneNode* parent, s32 id = -1);
 	~EntityModel();
 
 	void setDestination(float x, float y);
+
+	void update();
 
 	void render() override;
 
@@ -33,4 +41,8 @@ public:
 	{
 		return _mesh;
 	}
+
+	void printText(std::wstring text);
+
+	void move(vec2f amount);
 };
