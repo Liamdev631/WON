@@ -9,11 +9,11 @@ using namespace core;
 EntityModel::EntityModel(Entity::UID uid, const GameClient* client, scene::ISceneNode* parent, s32 id)
     : scene::ISceneNode(parent, client->component_graphics->getSceneManager(), id), uid(uid), _mesh(nullptr), _animator(nullptr), _client(client)
 {
-    _mesh = SceneManager->addAnimatedMeshSceneNode(SceneManager->getMesh("../Content/models/sydney.md2"), this);
+    _mesh = SceneManager->addAnimatedMeshSceneNode(SceneManager->getMesh("Content/models/sydney.md2"), this);
     _mesh->setScale(vector3df(0.005f));
     _mesh->setPosition({0, 0, 0});
     _mesh->setMaterialFlag(video::EMF_LIGHTING, false);
-    _mesh->setMaterialTexture(0, SceneManager->getVideoDriver()->getTexture("../Content/models/sydney.bmp"));
+    _mesh->setMaterialTexture(0, SceneManager->getVideoDriver()->getTexture("Content/models/sydney.bmp"));
     _mesh->setMD2Animation(EMAT_RUN);
 
     // Shadows

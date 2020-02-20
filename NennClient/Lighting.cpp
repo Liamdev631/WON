@@ -18,7 +18,7 @@ Lighting::Lighting(scene::ISceneNode* parent, scene::ISceneManager* smgr, s32 id
 
     smgr->setAmbientLight(video::SColorf(127.0f / 255, 140.0f / 255, 148.0f / 255, 1.0f));
 
-    auto skyDomeTex = smgr->getVideoDriver()->getTexture("../Content/textures/sky/skydome.jpg");
+    auto skyDomeTex = smgr->getVideoDriver()->getTexture("Content/textures/sky/skydome.jpg");
     _skyDome = smgr->addSkyDomeSceneNode(skyDomeTex, 16, 8, 0.999f, 2, 1000, smgr->getRootSceneNode());
 }
 

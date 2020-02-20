@@ -45,7 +45,6 @@ void EntityComponent::updateThisPlayer()
 	float dx = thisPlayer.position.x - thisPlayersModel->getPosition().X;
 	float dy = thisPlayer.position.y - thisPlayersModel->getPosition().Z;
 	float dist2 = dx * dx + dy * dy;
-	printf("%f, %f\n", dx, dy);
 
 	//if (thisPlayersModel->getPosition().X != thisPlayer.position.x ||
 	//	thisPlayersModel->getPosition().Z != thisPlayer.position.y)

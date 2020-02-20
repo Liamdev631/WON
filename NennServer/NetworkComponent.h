@@ -2,7 +2,7 @@
 #include "ServerComponent.h"
 #include "Entity.h"
 #include "Settings.h"
-#include "SFML\Network.hpp"
+#include <SFML\Network.hpp>
 #include <array>
 #include <json.hpp>
 #include <set>
