@@ -49,8 +49,8 @@ void CameraComponent::tick()
 	core::position2d<f32> cursorPos = graphics->getDevice()->getCursorControl()->getRelativePosition();
 	core::vector3df cameraPos = _cameraNode->getAbsolutePosition();
 
-	float change_x = (cursorPos.X - 0.5) * TurnSensitivity;
-	float change_y = (cursorPos.Y - 0.5) * TurnSensitivity;
+	float change_x = (cursorPos.X - 0.5f) * TurnSensitivity;
+	float change_y = (cursorPos.Y - 0.5f) * TurnSensitivity;
 	Direction += change_x;
 	ZDirection -= change_y;
 	if (ZDirection < -90)
@@ -73,7 +73,7 @@ void CameraComponent::tick()
 
 		_cameraNode->setPosition(core::vector3df(xf, yf, zf));
 		_cameraNode->setTarget(core::vector3df(playerPos.X, playerPos.Y, playerPos.Z));
-		thisPlayerModel->setRotation(core::vector3df(0, Direction, 0));
+		//thisPlayerModel->setRotation(core::vector3df(0, Direction, 0));
 	}
 
 	return;

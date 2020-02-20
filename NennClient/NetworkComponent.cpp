@@ -70,21 +70,20 @@ void NetworkComponent::tick()
 					_client->component_gameState->thisPlayersUID = uid;
 					Entity& playerEntity = _client->component_entity->getEntity(uid);
 					_client->component_gameState->thisPlayersEntity = &playerEntity;
-					playerEntity.position.x = x;
-					playerEntity.position.y = y;
+					playerEntity.position = { x, y };
 					printf("NetworkComponent: You have been assigned uid %u\n", uid);
 					break;
 				}
 				else if (message == "entity-update")
 				{
 					const Entity::UID uid = j["uid"];
-					const float x = j["x"];
-					const float y = j["y"];
-					//printf("NetworkComponent: Entity %u moved to (%f, %f)\n", uid, x, y);
 					if (uid != _client->component_gameState->thisPlayersUID)
 					{
+						const float x = j["x"];
+						const float y = j["y"];
 						auto& entity = _client->component_entity->getEntity(uid);
 						entity.position = { x, y };
+						printf("NetworkComponent: Entity %u moved to (%f, %f)\n", uid, x, y);
 					}
 					//printf("%u\n", uid);
 

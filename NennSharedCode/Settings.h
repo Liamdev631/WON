@@ -22,6 +22,9 @@ constexpr int MinCameraAngle = 15; // Degrees
 constexpr float CameraBoomLength = 0.8f;
 constexpr int TurnSensitivity = 100;
 
+// Graphics Settings
+constexpr bool ShadowsEnabled = false;
+
 // Speed Hacks
 constexpr bool EnableSpeedHackDetection = false;
 constexpr float MaxSpeed = 1.0f;

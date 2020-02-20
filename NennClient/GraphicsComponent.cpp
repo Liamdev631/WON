@@ -18,6 +18,7 @@ GraphicsComponent::GraphicsComponent(const GameClient* client)
 	params.Vsync = true;
 	params.Doublebuffer = true;
 	params.Bits = 24;
+	params.Stencilbuffer = ShadowsEnabled;
 	params.EventReceiver = &_client->component_input->input;
 	_device = createDeviceEx(params);
 	if (!_device)

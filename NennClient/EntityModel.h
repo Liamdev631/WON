@@ -21,7 +21,7 @@ public:
 	EntityModel(Entity::UID uid, const GameClient* client, scene::ISceneNode* parent, s32 id = -1);
 	~EntityModel();
 
-	void setDestination(float x, float y);
+	void setDestination(vec2f pos);
 
 	void update();
 
@@ -43,6 +43,4 @@ public:
 	}
 
 	void printText(std::wstring text);
-
-	void move(vec2f amount);
 };

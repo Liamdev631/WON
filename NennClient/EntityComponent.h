@@ -13,7 +13,7 @@ class EntityModel;
 class EntityComponent : public ClientComponent
 {
 private:
-	std::map<Entity::UID, Entity> _entityTable;
+	std::map<Entity::UID, Entity> _entities;
 	std::map<Entity::UID, EntityModel*> _entityModels;
 	set<Entity::UID> _activeEntities;
 	
@@ -24,6 +24,7 @@ public:
 
 	void preTick() override;
 	void tick() override;
+	void updateThisPlayer();
 	void postTick() override;
 
 	Entity& getEntity(Entity::UID uid);

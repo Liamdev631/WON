@@ -16,12 +16,12 @@ EntityComponent::EntityComponent(const GameServer* server)
 	// Load a few npcs
 	if (false)
 	{
-		for (int i = 0; i < NumberOfNPCS; i++)
+		for (int i = 0; i < 20; i++)
 		{
 			Entity::UID uid = grabNextAvailableNPC();
 			Entity& entity = getEntity(uid);
-			entity.position.x = 256;// 310 + (rand() % 500) / 100.0f;
-			entity.position.y = 256;// 320 + (rand() % 500) / 100.0f;
+			entity.position.x = 256 + (rand() % 500) / 100.0f;
+			entity.position.y = 256 + (rand() % 500) / 100.0f;
 		}
 	}
 }
@@ -34,7 +34,7 @@ void EntityComponent::clearUpdateFlags()
 
 Entity& EntityComponent::getEntity(Entity::UID uid)
 {
-	return _entityTable[uid];
+	return _entities[uid];
 }
 
 bool EntityComponent::isEntityActive(Entity::UID uid)
@@ -55,10 +55,10 @@ set<Entity::UID> EntityComponent::getActivePlayers() const
 Entity::UID EntityComponent::grabNextAvailableNPC()
 {
 	Entity::UID uid = NumberOfPlayers; // Normal entities come after players
-	while (_entityTable[uid].active) { uid++; }
-	assert(uid < _entityTable.size());
+	while (_entities[uid].active) { uid++; }
+	assert(uid < _entities.size());
 	_activeEntities.emplace(uid);
-	Entity& entity = _entityTable[uid];
+	Entity& entity = _entities[uid];
 	entity.active = true;
 
 	return uid;
@@ -69,7 +69,7 @@ Entity& EntityComponent::initializePlayer(Entity::UID uid)
 	assert(uid < NumberOfPlayers);
 	_activeEntities.emplace(uid);
 	_activePlayers.emplace(uid);
-	Entity& entity = _entityTable[uid];
+	Entity& entity = _entities[uid];
 	entity.active = true;
 	entity.position.x = 256;// float(316 + rand() % 5);
 	entity.position.y = 256;// float(316 + rand() % 5);
@@ -78,7 +78,7 @@ Entity& EntityComponent::initializePlayer(Entity::UID uid)
 
 void EntityComponent::removeEntity(Entity::UID uid)
 {
-	auto& entity = _entityTable[uid];
+	auto& entity = _entities[uid];
 
 	// build json
 	json msg;
@@ -157,7 +157,7 @@ void EntityComponent::setEntityUpdateFlag(Entity::UID uid)
 
 void EntityComponent::sendEntityUpdateToPlayer(Entity::UID from, Entity::UID to)
 {
-	auto entity = _entityTable[from];
+	auto entity = _entities[from];
 
 	json msg;
 	msg["message"] = "entity-update";

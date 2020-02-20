@@ -47,15 +47,20 @@ void MovementComponent::tick()
 	}
 
 	// Test move
-	/*for (Entity::UID uid : _server->component_entity->getActiveEntities())
+	if (false)
 	{
-		auto& entity = _server->component_entity->getEntity(uid);
-		static float time;
-		time += 0.01f;
-		entity.position.x = 316 + cos(time * 5.0f + uid) * 1.0f;
-		entity.position.y = 316 + sin(time * 5.0f + uid) * 1.0f;
-		_server->component_entity->setEntityUpdateFlag(uid);
-	}*/
+		for (Entity::UID uid : _server->component_entity->getActiveEntities())
+		{
+			if (_server->component_entity->isPlayer(uid))
+				return;
+			auto& entity = _server->component_entity->getEntity(uid);
+			static float time;
+			time += 0.01f;
+			entity.position.x += cos(time * 5.0f + uid) * 1.0f;
+			entity.position.y += sin(time * 5.0f + uid) * 1.0f;
+			_server->component_entity->setEntityUpdateFlag(uid);
+		}
+	}
 }
 
 void MovementComponent::postTick()

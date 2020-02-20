@@ -16,8 +16,8 @@ struct vec2
 
 	vec2<T> operator*(const T& rhs) const { return vec2<T>((T)(x * rhs), (T)(y * rhs)); }
 	vec2<T> operator/(const T& rhs) const { return vec2<T>((T)(x / rhs), (T)(y / rhs)); }
-	vec2<T> operator-(const vec2<T>& rhs) const { return vec2<T>((T)(x - rhs.x), (T)(y - rhs.x)); }
-	vec2<T> operator+(const vec2<T>& rhs) const { return vec2<T>((T)(x + rhs.x), (T)(y + rhs.x)); }
+	vec2<T> operator-(const vec2<T>& rhs) const { return vec2<T>((T)(x - rhs.x), (T)(y - rhs.y)); }
+	vec2<T> operator+(const vec2<T>& rhs) const { return vec2<T>((T)(x + rhs.x), (T)(y + rhs.y)); }
 
 	bool operator==(const vec2<T>& rhs) const { return x == rhs.x && y == rhs.y; };
 	bool operator!=(const vec2<T>& rhs) const { return x != rhs.x || y != rhs.y; };

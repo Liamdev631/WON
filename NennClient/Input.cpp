@@ -104,7 +104,7 @@ void InputComponent::tick()
             vec2f rotatedMove;
             rotatedMove.x = (moveAmount.x * cos(theta)) + (moveAmount.y * sin(theta));
             rotatedMove.y = (moveAmount.x * -sin(theta)) + (moveAmount.y * cos(theta));
-            thisPlayersModel->move(rotatedMove);
+            thisPlayersEntity->position = thisPlayersEntity->position + rotatedMove;
         }
     }
 }

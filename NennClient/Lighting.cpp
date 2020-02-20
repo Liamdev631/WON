@@ -10,10 +10,11 @@ constexpr float VerticalScale = 0.0f;
 Lighting::Lighting(scene::ISceneNode* parent, scene::ISceneManager* smgr, s32 id)
 	: scene::ISceneNode(parent, smgr, id), _sunlight(nullptr)
 {
-    _sunlight = smgr->addLightSceneNode(0, core::vector3df(0.0f, 0.0f, 0.0f),
+    _sunlight = smgr->addLightSceneNode(smgr->getRootSceneNode(), core::vector3df(0.0f, 0.0f, 0.0f),
         video::SColor(0, 200, 200, 200), 5000.0f);
     _sunlight->setLightType(video::ELT_DIRECTIONAL);
-    _sunlight->enableCastShadow(true);
+    _sunlight->setRotation({ 45, 0, 0 });
+    //_sunlight->enableCastShadow(true);
 
     smgr->setAmbientLight(video::SColorf(127.0f / 255, 140.0f / 255, 148.0f / 255, 1.0f));
 

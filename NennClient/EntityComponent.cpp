@@ -22,46 +22,58 @@ EntityComponent::~EntityComponent()
 
 void EntityComponent::preTick()
 {
-	for (Entity::UID uid : getActiveEntities())
-	{
-		_entityTable[uid].lastPosition = _entityTable[uid].position;
-	}
+
 }
 
 void EntityComponent::tick()
 {
-	Entity::UID thisPlayersUID = _client->component_gameState->thisPlayersUID;
-	for (auto& uid : _activeEntities)
-	{
+	updateThisPlayer();
+
+	for (auto& uid : getActiveEntities())
 		_entityModels[uid]->update();
+}
+
+void EntityComponent::updateThisPlayer()
+{
+	Entity::UID thisPlayersUID = _client->component_gameState->thisPlayersUID;
+	if (thisPlayersUID == NO_UID)
+		return;
+
+	Entity& thisPlayer = getEntity(thisPlayersUID);
+	EntityModel* thisPlayersModel = getEntityModel(thisPlayersUID);
+
+	float dx = thisPlayer.position.x - thisPlayersModel->getPosition().X;
+	float dy = thisPlayer.position.y - thisPlayersModel->getPosition().Z;
+	float dist2 = dx * dx + dy * dy;
+	printf("%f, %f\n", dx, dy);
+
+	//if (thisPlayersModel->getPosition().X != thisPlayer.position.x ||
+	//	thisPlayersModel->getPosition().Z != thisPlayer.position.y)
+	if (dist2 > 0.001f)
+	{
+		static int UpdateCounter = 0;
+		if (UpdateCounter++ == 6) // 10 times per second
+		{
+			UpdateCounter = 0;
+			// If we moved the player, relay it to the server
+			json j;
+			j["message"] = "move-to-position";
+			j["x"] = thisPlayersModel->getPosition().X;
+			j["y"] = thisPlayersModel->getPosition().Z;
+			_client->component_network->sendJson(j);
+		}
 	}
 }
 
 void EntityComponent::postTick()
 {
 
-	auto thisPlayerEntity = _client->component_gameState->thisPlayersEntity;
-	if (thisPlayerEntity)
-	{
-		auto thisPlayersModel = _client->component_gameState->thisPlayersModel;
-		vec2f pos = { thisPlayersModel->getAbsolutePosition().X, thisPlayersModel->getAbsolutePosition().Z };
-		if (thisPlayerEntity->position != pos)
-		{
-			thisPlayerEntity->position = pos;
-			
-			// If we moved the player, relay it to the server
-			json j;
-			j["message"] = "move-to-position";
-			j["x"] = thisPlayerEntity->position.x;
-			j["y"] = thisPlayerEntity->position.y;
-			_client->component_network->sendJson(j);
-		}
-	}
 }
 
 Entity& EntityComponent::getEntity(Entity::UID uid)
 {
-	Entity& entity = _entityTable[uid];
+	assert(uid != NO_UID);
+	Entity& entity = _entities[uid];
 	if (!entity.active)
 	{
 		// Setup the new entity
@@ -79,7 +91,7 @@ Entity& EntityComponent::getEntity(Entity::UID uid)
 void EntityComponent::removeEntity(Entity::UID entity)
 {
 	_activeEntities.erase(entity);
-	_entityTable.erase(entity);
+	_entities.erase(entity);
 	_entityModels.erase(entity);
 }
 

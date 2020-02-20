@@ -11,7 +11,7 @@ class EntityComponent : public ServerComponent
 {
 private:
 	// The table of all Entities.
-	EntityTable<Entity> _entityTable;
+	EntityTable<Entity> _entities;
 
 	// Update flags. If the flag is set, the entity's new status
 	// should be sent to nearby players.
