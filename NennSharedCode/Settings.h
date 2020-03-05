@@ -10,16 +10,16 @@ constexpr int TicksPerSecond = 15;
 // Network Settings
 constexpr bool EnableConnectionTimeout = false;
 constexpr unsigned short ServerPort = 25565;
-static const char* ServerIP = "localhost";
+static const char* ServerIP = "192.168.0.28";
 
 // Entity settings
-constexpr unsigned int NumberOfPlayers = 32;
+constexpr unsigned int NumberOfPlayers = 64;
 constexpr unsigned int NumberOfNPCS = 256;
 constexpr unsigned int NumberOfEntities = NumberOfPlayers + NumberOfNPCS;
 
 // Camera Settings
-constexpr int MinCameraAngle = 15; // Degrees
-constexpr float CameraBoomLength = 0.8f;
+constexpr int MinCameraAngle = 0; // Degrees
+constexpr float CameraBoomLength = 0.6f;
 constexpr int TurnSensitivity = 100;
 
 // Graphics Settings

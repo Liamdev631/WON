@@ -12,13 +12,16 @@ class EntityModel : public scene::ISceneNode
 {
 private:
 	scene::IAnimatedMeshSceneNode* _mesh;
-	scene::ISceneNodeAnimator* _animator;
+	scene::ISceneNodeAnimator* _movementAnimator;
+	
 	const GameClient* _client;
+	bool _walking;
 
 public:
+	scene::IMeshSceneNode* PickerNode;
 	Entity::UID uid;
 
-	EntityModel(Entity::UID uid, const GameClient* client, scene::ISceneNode* parent, s32 id = -1);
+	EntityModel(Entity::UID uid, const GameClient* client, scene::ISceneNode* parent);
 	~EntityModel();
 
 	void setDestination(vec2f pos);
@@ -43,4 +46,6 @@ public:
 	}
 
 	void printText(std::wstring text);
+
+	void setIsPlayer();
 };

@@ -14,9 +14,9 @@ EntityComponent::EntityComponent(const GameServer* server)
 	clearUpdateFlags();
 
 	// Load a few npcs
-	if (false)
+	if (true)
 	{
-		for (int i = 0; i < 20; i++)
+		for (int i = 0; i < 10; i++)
 		{
 			Entity::UID uid = grabNextAvailableNPC();
 			Entity& entity = getEntity(uid);
@@ -71,8 +71,8 @@ Entity& EntityComponent::initializePlayer(Entity::UID uid)
 	_activePlayers.emplace(uid);
 	Entity& entity = _entities[uid];
 	entity.active = true;
-	entity.position.x = 256;// float(316 + rand() % 5);
-	entity.position.y = 256;// float(316 + rand() % 5);
+	entity.position.x = 256 + float(rand() % 5);
+	entity.position.y = 256 + float(rand() % 5);
 	return entity;
 }
 
@@ -157,7 +157,9 @@ void EntityComponent::setEntityUpdateFlag(Entity::UID uid)
 
 void EntityComponent::sendEntityUpdateToPlayer(Entity::UID from, Entity::UID to)
 {
-	auto entity = _entities[from];
+	assert(isPlayer(to));
+
+	auto& entity = _entities[from];
 
 	json msg;
 	msg["message"] = "entity-update";

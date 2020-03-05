@@ -6,6 +6,8 @@
 #include "GameStateComponent.h"
 #include "EntityComponent.h"
 #include "Input.h"
+#include "Picker.h"
+#include "GUI.h"
 #include <thread>
 #include <chrono>
 
@@ -19,6 +21,8 @@ GameClient::GameClient()
 	component_camera = make_unique<CameraComponent>(this);
 	component_gameState = make_unique<GameStateComponent>(this);
 	component_entity = make_unique<EntityComponent>(this);
+	component_picker = make_unique<Picker>(this);
+	component_gui = make_unique<GUI>(this);
 
 	_components = {
 		component_network.get(),
@@ -26,6 +30,7 @@ GameClient::GameClient()
 		component_input.get(),
 		component_entity.get(),
 		component_camera.get(),
+		component_picker.get(),
 	};
 }
 
@@ -37,6 +42,7 @@ GameClient::~GameClient()
 void GameClient::tick()
 {
 	component_graphics->preTick();
+	component_gui->preTick();
 
 	for (auto c : _components)
 		c->preTick();
@@ -45,7 +51,10 @@ void GameClient::tick()
 	for (auto c : _components)
 		c->postTick();
 
+	component_gui->tick();
 	component_graphics->tick();
+	component_gui->postTick();
 	component_graphics->postTick();
+	//printf("%i\n", component_graphics->getDriver()->getFPS());
 }
 

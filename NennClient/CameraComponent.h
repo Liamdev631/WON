@@ -2,12 +2,13 @@
 #include "ClientComponent.h"
 #include "Irrlicht\ICameraSceneNode.h"
 
-using namespace irr::scene;
+using namespace irr;
+using namespace core;
 
 class CameraComponent : public ClientComponent
 {
 private:
-	ICameraSceneNode* _cameraNode;
+	scene::ICameraSceneNode* _cameraNode;
 
 public:
 	float Direction;
@@ -19,4 +20,8 @@ public:
 	void preTick() override;
 	void tick() override;
 	void postTick() override;
+
+	line3df getRay() const;
+
+	scene::ICameraSceneNode* getCameraNode();
 };

@@ -24,8 +24,9 @@ public:
 
 	void preTick() override;
 	void tick() override;
-	void updateThisPlayer();
 	void postTick() override;
+
+	void updateThisPlayer();
 
 	Entity& getEntity(Entity::UID uid);
 	void removeEntity(Entity::UID uid);

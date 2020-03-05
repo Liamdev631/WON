@@ -11,6 +11,8 @@ class CameraComponent;
 class GameStateComponent;
 class EntityComponent;
 class InputComponent;
+class Picker;
+class GUI;
 
 class GameClient
 {
@@ -24,6 +26,8 @@ public:
 	unique_ptr<CameraComponent> component_camera;
 	unique_ptr<GameStateComponent> component_gameState;
 	unique_ptr<EntityComponent> component_entity;
+	unique_ptr<Picker> component_picker;
+	unique_ptr<GUI> component_gui;
 
 	GameClient();
 	~GameClient();

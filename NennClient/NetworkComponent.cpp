@@ -7,6 +7,8 @@
 #include <vector>
 #include <json.hpp>
 #include "EntityModel.h"
+#include "Config.h"
+#include "IDFlags.h"
 
 using namespace std;
 using namespace nlohmann;
@@ -15,14 +17,13 @@ NetworkComponent::NetworkComponent(const GameClient* client)
 	: ClientComponent(client), _connectionStatus(ConnectionStatus::Disconnected)
 {
 	printf("NetworkComponent: Attempting connection to server.\n");
-	_socket.setBlocking(true);
-	//_socket.connect(sf::IpAddress(ServerIP.data()), ServerPort, sf::seconds(5));
+	_socket.setBlocking(false);
 	auto connectResult = _socket.connect("localhost", ServerPort, sf::seconds(5));
-	if (connectResult == sf::Socket::Status::Done)
+	/*if (connectResult == sf::Socket::Status::Done)
 		printf("NetworkComponent: Connected to the server!\n");
 	else
 		printf("NetworkComponent: Connection to server failed! Code %u\n", static_cast<unsigned int>(connectResult));
-	_socket.setBlocking(false);
+	_socket.setBlocking(false);*/
 }
 
 NetworkComponent::~NetworkComponent()
@@ -55,11 +56,16 @@ void NetworkComponent::tick()
 
 			case sf::Socket::Status::Done:
 			{
-				_connectionStatus = ConnectionStatus::Connected;
-				string s;
+				if (_connectionStatus != ConnectionStatus::Connected)
+				{
+					_connectionStatus = ConnectionStatus::Connected;
+					onConnected();
+				}
+
+				std::string s;
 				packet >> s;
 				json j = json::parse(s);
-				string message = j["message"];
+				std::string message = j["message"];
 
 				// Determine which type of message to decode
 				if (message == "hello-player")
@@ -67,10 +73,22 @@ void NetworkComponent::tick()
 					const Entity::UID uid = j["uid"];
 					const float x = j["x"];
 					const float y = j["y"];
-					_client->component_gameState->thisPlayersUID = uid;
+
 					Entity& playerEntity = _client->component_entity->getEntity(uid);
-					_client->component_gameState->thisPlayersEntity = &playerEntity;
+					EntityModel* playerModel = _client->component_entity->getEntityModel(uid);
+
 					playerEntity.position = { x, y };
+					playerModel->setIsPlayer();
+
+					// Create references to this player in the GameState component
+					auto gs = _client->component_gameState.get();
+					gs->thisPlayersUID = uid;
+					gs->thisPlayersEntity = &playerEntity;
+					gs->thisPlayersModel = playerModel;
+					
+					// Make sure our own player is not pickable
+					playerModel->setID(IDFlags::IsNotPickable);
+
 					printf("NetworkComponent: You have been assigned uid %u\n", uid);
 					break;
 				}
@@ -83,15 +101,14 @@ void NetworkComponent::tick()
 						const float y = j["y"];
 						auto& entity = _client->component_entity->getEntity(uid);
 						entity.position = { x, y };
-						printf("NetworkComponent: Entity %u moved to (%f, %f)\n", uid, x, y);
+						//printf("NetworkComponent: Entity %u moved to (%f, %f)\n", uid, x, y);
 					}
-					//printf("%u\n", uid);
 
 					break;
 				}
 				else if (message == "print-string")
 				{
-					string str = j["string"];
+					std::string str = j["string"];
 					auto thisPlayersModel = _client->component_gameState->thisPlayersModel;
 					if (thisPlayersModel)
 					{
@@ -120,6 +137,17 @@ void NetworkComponent::tick()
 
 }
 
+void NetworkComponent::onConnected()
+{
+	printf("NetworkComponent: Connected to the server!\n");
+
+	// Send login info to the server
+	Config config("login.config");
+	json j = config.read();
+	//j["message"] = "login-info";
+	//sendJson(j);
+}
+
 void NetworkComponent::postTick()
 {
 
@@ -128,6 +156,6 @@ void NetworkComponent::postTick()
 void NetworkComponent::sendJson(json& j)
 {
 	sf::Packet packet;
-	packet << j.dump(-1, ' ', true);;
+	packet << j.dump(-1, ' ', true);
 	_socket.send(packet);
 }

@@ -24,6 +24,7 @@ public:
 
 	void preTick() override;
 	void tick() override;
+	void onConnected();
 	void postTick() override;
 
 	void sendJson(json& j);

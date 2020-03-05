@@ -16,10 +16,12 @@ GraphicsComponent::GraphicsComponent(const GameClient* client)
 	params.Fullscreen = false;
 	params.DriverType = EDT_OPENGL;
 	params.Vsync = true;
+	params.DeviceType = EIDT_BEST;
 	params.Doublebuffer = true;
 	params.Bits = 24;
 	params.Stencilbuffer = ShadowsEnabled;
 	params.EventReceiver = &_client->component_input->input;
+	params.WindowSize = { 1366, 768 };
 	_device = createDeviceEx(params);
 	if (!_device)
 		return;
@@ -30,7 +32,7 @@ GraphicsComponent::GraphicsComponent(const GameClient* client)
 
 	_terrain = new TerrainComponent(_sceneManager->getRootSceneNode(), _sceneManager);
 	_lighting = new Lighting(_sceneManager->getRootSceneNode(), _sceneManager);
-	//_water = new Water(_sceneManager->getRootSceneNode(), _sceneManager);
+	_water = new Water(_sceneManager->getRootSceneNode(), _sceneManager);
 
 	_device->getCursorControl()->setVisible(false);
 	_device->setWindowCaption(L"World of Nenn");

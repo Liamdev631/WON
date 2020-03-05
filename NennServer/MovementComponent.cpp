@@ -4,13 +4,35 @@
 #include "GameServer.h"
 #include "Settings.h"
 #include <json.hpp>
+#include <iostream>
 
 using namespace nlohmann;
 
 MovementComponent::MovementComponent(const GameServer* server)
-	: ServerComponent(server)
+	: ServerComponent(server), _movementBoundaries({})
 {
+	return;
+	// Load the movement boundaries from a json file
+	FILE* file;
+	char buffer[512];
+	const char* filename = "Content/data/npc-movement-boundaries.json";
+	fopen_s(&file, filename, "r");
+	if (!file)
+	{
+		printf("MovementComponent: Failed to open %s!\n", filename);
+		return;
+	}
+	size_t bytesRead = fread_s(buffer, 512, sizeof(char), 512 / sizeof(char), file);
 
+	string jString = string(buffer, bytesRead);
+	json j = json::parse(jString);
+
+	auto arr = j["npc-movement-boundaries"];
+	assert(arr.is_array());
+	for (auto& elem : arr)
+	{
+		Entity::UID uid = arr.get<Entity::UID>();
+	}
 }
 
 MovementComponent::~MovementComponent()
@@ -47,17 +69,17 @@ void MovementComponent::tick()
 	}
 
 	// Test move
-	if (false)
+	if (true)
 	{
 		for (Entity::UID uid : _server->component_entity->getActiveEntities())
 		{
 			if (_server->component_entity->isPlayer(uid))
-				return;
+				continue;
 			auto& entity = _server->component_entity->getEntity(uid);
 			static float time;
 			time += 0.01f;
-			entity.position.x += cos(time * 5.0f + uid) * 1.0f;
-			entity.position.y += sin(time * 5.0f + uid) * 1.0f;
+			entity.position.x += cos(time * 0.3f + uid) * 0.05f;
+			entity.position.y += sin(time * 0.3f + uid) * 0.05f;
 			_server->component_entity->setEntityUpdateFlag(uid);
 		}
 	}

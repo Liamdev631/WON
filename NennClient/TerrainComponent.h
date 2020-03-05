@@ -7,6 +7,7 @@ class TerrainComponent : public scene::ISceneNode
 {
 private:
 	scene::ITerrainSceneNode* _terrainNode;
+	scene::IMeshSceneNode* _octreeSceneNode;
 
 public:
 	TerrainComponent(scene::ISceneNode* parent, scene::ISceneManager* smgr, s32 id = -1);

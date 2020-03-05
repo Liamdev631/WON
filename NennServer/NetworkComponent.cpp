@@ -100,8 +100,13 @@ sf::Socket::Status NetworkComponent::readMessageFromConnection(const Entity::UID
 				const float x = j["x"];
 				const float y = j["y"];
 				entity.position = { x, y };
-				printf("%f, %f\n", x, y);
 				_server->component_entity->setEntityUpdateFlag(uid);
+			}
+			else if (message == "login-info")
+			{
+				string username = j["username"];
+				string password = j["password"];
+				printf("uid: %u, user: %s, pass: %s.\n", uid, username.c_str(), password.c_str());
 			}
 
 			break;

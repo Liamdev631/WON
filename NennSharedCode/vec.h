@@ -57,3 +57,37 @@ inline vec2f lerp(const vec2<T>& v1, const vec2<T>& v2, const float& t)
 {
 	return vec2f(v1.x + (v2.x - v1.x) * t, v1.y + (v2.y - v1.y) * t);
 }
+
+template <typename T>
+struct rectangle
+{
+	vec2<T> position;
+	vec2<T> size;
+
+	rectangle(vec2<T> position, vec2<T> size)
+		: position(position), size(size)
+	{
+
+	}
+
+	rectangle()
+		: position({ 0, 0 }), size({ 0, 0 })
+	{
+
+	}
+
+	rectangle(rectangle&& r)
+		: position(r.position), size(r.size)
+	{
+
+	}
+
+	T getLeft() { return position.x; }
+	T getRight() { return position.x + size.x; }
+	T getTop() { return position.y; }
+	T getbottom() { return position.y + size.y; }
+};
+
+typedef rectangle<float> rect2f;
+typedef rectangle<int> rect2i;
+typedef rectangle<unsigned int> rect2u;

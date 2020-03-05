@@ -28,6 +28,8 @@ private:
 	Water* _water;
 	Lighting* _lighting;
 
+
+
 public:
 	GraphicsComponent(const GameClient* client);
 	~GraphicsComponent();

@@ -9,7 +9,7 @@ private:
 	scene::ISceneNode* _waterNode;
 
 public:
-	Water(scene::ISceneNode* parent, scene::ISceneManager* smgr, s32 id = -1);
+	Water(scene::ISceneNode* parent, scene::ISceneManager* smgr);
 	~Water();
 
 	virtual void render()

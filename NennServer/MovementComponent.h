@@ -9,6 +9,7 @@ using namespace std;
 class MovementComponent : public ServerComponent
 {
 private:
+	EntityTable<rect2f> _movementBoundaries;
 
 public:
 	MovementComponent(const GameServer* server);

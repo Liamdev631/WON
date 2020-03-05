@@ -10,7 +10,7 @@ private:
 	scene::ISceneNode* _skyDome;
 
 public:
-	Lighting(scene::ISceneNode* parent, scene::ISceneManager* smgr, s32 id = -1);
+	Lighting(scene::ISceneNode* parent, scene::ISceneManager* smgr);
 	~Lighting();
 
 	virtual void render()

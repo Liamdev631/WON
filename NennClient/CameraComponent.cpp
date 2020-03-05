@@ -6,6 +6,7 @@
 #include <Irrlicht\irrlicht.h>
 #include "EntityModel.h"
 #include <Settings.h>
+#include "IDFlags.h"
 
 using namespace irr;
 using namespace scene;
@@ -24,7 +25,8 @@ CameraComponent::CameraComponent(const GameClient* client)
 	_cameraNode = smgr->addCameraSceneNode(nullptr, { 5, 2, 5, }, { 256, 1, 256 });
 	if (_cameraNode)
 		printf("CameraComponent: Initialized\n");
-	//_cameraNode = smgr->addCameraSceneNodeMaya(smgr->getRootSceneNode(), 100.0f, 0.5f, -1);
+	_cameraNode->setID(IDFlags::IsNotPickable);
+	_cameraNode->setName("CameraComponent");
 	_cameraNode->setNearValue(0.1f);
 	_cameraNode->setFarValue(1024.0f);
 }
@@ -71,8 +73,8 @@ void CameraComponent::tick()
 		float yf = playerPos.Y - sin(ZDirection * PI / 180.0f) * CameraBoomLength;
 		float zf = playerPos.Z + sin(Direction * PI / 180.0f) * CameraBoomLength;
 
-		_cameraNode->setPosition(core::vector3df(xf, yf, zf));
-		_cameraNode->setTarget(core::vector3df(playerPos.X, playerPos.Y, playerPos.Z));
+		_cameraNode->setPosition(core::vector3df(xf, yf + 0.5f, zf));
+		_cameraNode->setTarget(core::vector3df(playerPos.X, playerPos.Y + 0.5f, playerPos.Z));
 		//thisPlayerModel->setRotation(core::vector3df(0, Direction, 0));
 	}
 
@@ -82,4 +84,17 @@ void CameraComponent::tick()
 void CameraComponent::postTick()
 {
 	
+}
+
+line3df CameraComponent::getRay() const
+{
+	line3df ray;
+	ray.start = _cameraNode->getPosition();
+	ray.end = ray.start + (_cameraNode->getTarget() - ray.start).normalize() * 1000.0f;
+	return ray;
+}
+
+scene::ICameraSceneNode* CameraComponent::getCameraNode()
+{
+	return _cameraNode;
 }

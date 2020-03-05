@@ -139,29 +139,36 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CameraComponent.cpp" />
+    <ClCompile Include="Config.cpp" />
     <ClCompile Include="EntityComponent.cpp" />
     <ClCompile Include="EntityModel.cpp" />
     <ClCompile Include="GameClient.cpp" />
     <ClCompile Include="GameStateComponent.cpp" />
     <ClCompile Include="GraphicsComponent.cpp" />
+    <ClCompile Include="GUI.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Lighting.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="NetworkComponent.cpp" />
+    <ClCompile Include="Picker.cpp" />
     <ClCompile Include="TerrainComponent.cpp" />
     <ClCompile Include="Water.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraComponent.h" />
+    <ClInclude Include="Config.h" />
     <ClInclude Include="EntityComponent.h" />
     <ClInclude Include="EntityModel.h" />
     <ClInclude Include="GameClient.h" />
     <ClInclude Include="ClientComponent.h" />
     <ClInclude Include="GameStateComponent.h" />
     <ClInclude Include="GraphicsComponent.h" />
+    <ClInclude Include="GUI.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Lighting.h" />
     <ClInclude Include="NetworkComponent.h" />
+    <ClInclude Include="Picker.h" />
+    <ClInclude Include="IDFlags.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="TerrainComponent.h" />
     <ClInclude Include="Water.h" />
