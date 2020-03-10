@@ -25,7 +25,7 @@ GraphicsComponent::GraphicsComponent(const GameClient* client)
 	_device = createDeviceEx(params);
 	if (!_device)
 		return;
-	
+
 	_driver = _device->getVideoDriver();
 	_sceneManager = _device->getSceneManager();
 	_gui = _device->getGUIEnvironment();

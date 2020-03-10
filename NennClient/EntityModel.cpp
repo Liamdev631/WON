@@ -30,14 +30,15 @@ EntityModel::EntityModel(Entity::UID uid, const GameClient* client, scene::IScen
     _mesh->setName(meshName.c_str());
 
     // Setup the node that makes is possible to pick this
-    PickerNode = SceneManager->addSphereSceneNode(30, 16, _mesh);
-    PickerNode->setID(IDFlags::IsPickable);
-    PickerNode->setVisible(true);
+    _pickerNode = new PickerNode(_mesh, SceneManager);
+    _pickerNode->data.setEntity(uid);
+    _pickerNode->setRadius(50);
     auto pickerName = name;
     pickerName.append("_picker");
-    PickerNode->setName(pickerName.c_str());
+    _pickerNode->setName(pickerName.c_str());
+    _client->component_picker->addPickedObject(_pickerNode);
 
-    _client->component_picker->addPickedObject(PickerNode, PickerTableEntry(PickerObjectType::Entity, uid));
+    //auto debug = SceneManager->addSphereSceneNode(_pickerNode->getRadius(), 16, _pickerNode);
 
     // Shadows
     if (ShadowsEnabled)
@@ -46,8 +47,10 @@ EntityModel::EntityModel(Entity::UID uid, const GameClient* client, scene::IScen
 
 EntityModel::~EntityModel()
 {
-    _client->component_picker->removePickedObject(this);
-
+    _client->component_picker->removePickedObject(_pickerNode);
+    _pickerNode->drop();
+    if (_movementAnimator)
+        _movementAnimator->drop();
 }
 
 void EntityModel::setDestination(vec2f pos)
@@ -76,6 +79,7 @@ void EntityModel::update()
     float dist = sqrtf(dx * dx + dy * dy);
     if (dist > 0.01f)
     {
+        removeAnimator(_movementAnimator);
         _movementAnimator = SceneManager->createFlyStraightAnimator(getPosition(), { destination.x, 0, destination.y }, 100);
         addAnimator(_movementAnimator);
 
@@ -150,5 +154,5 @@ void EntityModel::printText(std::wstring text)
 
 void EntityModel::setIsPlayer()
 {
-    PickerNode->setID(IDFlags::IsNotPickable);
+    _pickerNode->setID(IDFlags::IsNotPickable);
 }

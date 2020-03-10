@@ -36,26 +36,21 @@ void Picker::postTick()
 	// Release the selected scene node
 	if (_selectedSceneNode)
 	{
-		_selectedSceneNode->setMaterialFlag(EMF_LIGHTING, true);
 		_selectedSceneNode->drop();
 		_selectedSceneNode = nullptr;
 	}
 
 	// Ray trace for a new selected scene node
 	scene::ISceneCollisionManager* collisionManager = _client->component_graphics->getSceneManager()->getSceneCollisionManager();
-	_selectedSceneNode = collisionManager->getSceneNodeFromCameraBB(_client->component_camera->getCameraNode(), IDFlags::IsPickable);
+	ISceneNode* node = collisionManager->getSceneNodeFromCameraBB(_client->component_camera->getCameraNode(), IDFlags::IsPickable);
 	
 	// If there is a new selected node, grab a reference to it
-	if (_selectedSceneNode)
+	if (_objectTable.find(static_cast<PickerNode*>(node)) != _objectTable.end())
 	{
+		_selectedSceneNode = static_cast<PickerNode*>(node);
 		_selectedSceneNode->grab();
-		_selectedSceneNode->setMaterialFlag(EMF_LIGHTING, false);
 
-		auto e = _objectTable.find(_selectedSceneNode);
-		assert(e != _objectTable.end());
-		PickerTableEntry entry = e->second;
-
-		if (entry.type == PickerObjectType::Entity)
+		if (_selectedSceneNode->data.type == PickerObjectType::Entity)
 		{
 			targetString = L"Entity!";
 		}
@@ -64,18 +59,20 @@ void Picker::postTick()
 	_targetText->setText(targetString.c_str());
 }
 
-scene::ISceneNode* Picker::getSelectedSceneNode() const
+PickerNode* Picker::getSelectedSceneNode() const
 {
 	return _selectedSceneNode;
 }
 
-void Picker::addPickedObject(scene::ISceneNode* node, PickerTableEntry entry)
+void Picker::addPickedObject(PickerNode* node)
 {
-	_objectTable[node] = entry;
+	node->grab();
 	node->setID(node->getID() | IDFlags::IsPickable);
+	_objectTable.insert(node);
 }
 
-void Picker::removePickedObject(scene::ISceneNode* node)
+void Picker::removePickedObject(PickerNode* node)
 {
+	node->drop();
 	_objectTable.erase(node);
 }

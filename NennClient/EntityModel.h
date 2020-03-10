@@ -2,6 +2,7 @@
 #include <Irrlicht\irrlicht.h>
 #include <string>
 #include <Entity.h>
+#include "PickerNode.h"
 
 using namespace std;
 using namespace irr;
@@ -13,12 +14,12 @@ class EntityModel : public scene::ISceneNode
 private:
 	scene::IAnimatedMeshSceneNode* _mesh;
 	scene::ISceneNodeAnimator* _movementAnimator;
+	PickerNode* _pickerNode;
 	
 	const GameClient* _client;
 	bool _walking;
 
 public:
-	scene::IMeshSceneNode* PickerNode;
 	Entity::UID uid;
 
 	EntityModel(Entity::UID uid, const GameClient* client, scene::ISceneNode* parent);

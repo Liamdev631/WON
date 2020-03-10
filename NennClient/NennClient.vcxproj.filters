@@ -25,6 +25,12 @@
     <Filter Include="Source Files\Components\Graphics">
       <UniqueIdentifier>{aae3b791-4f05-4ba1-80fd-a139e96eaa11}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Picking">
+      <UniqueIdentifier>{43d35841-8769-4efd-8257-fc7fc7b63994}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Picking">
+      <UniqueIdentifier>{de638f29-550b-4edf-bdda-3a680d17427b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameClient.cpp">
@@ -66,11 +72,14 @@
     <ClCompile Include="Config.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Picker.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GUI.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PickerNode.cpp">
+      <Filter>Source Files\Picking</Filter>
+    </ClCompile>
+    <ClCompile Include="Picker.cpp">
+      <Filter>Source Files\Picking</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -116,14 +125,17 @@
     <ClInclude Include="Config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Picker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IDFlags.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GUI.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PickerNode.h">
+      <Filter>Header Files\Picking</Filter>
+    </ClInclude>
+    <ClInclude Include="Picker.h">
+      <Filter>Header Files\Picking</Filter>
+    </ClInclude>
+    <ClInclude Include="IDFlags.h">
+      <Filter>Header Files\Picking</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
