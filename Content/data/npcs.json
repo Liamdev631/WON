@@ -1,3 +1,17 @@
-entity
-	"uid": 1
-	""
+{
+	"npcs":[
+		{
+			"uid": 0,
+			"name": "NPC 0",
+			"type": 1
+		},{
+			"uid": 1,
+			"name": "NPC 1",
+			"type": 1
+		},{
+			"uid": 2,
+			"name": "NPC 2",
+			"type": 2
+		}
+	]
+}

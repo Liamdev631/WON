@@ -7,16 +7,19 @@
 #include "GameStateComponent.h"
 #include "EntityModel.h"
 #include <assert.h>
+#include <Irrlicht\irrlicht.h>
 
 Picker::Picker(const GameClient* client)
 	: ClientComponent(client), _selectedSceneNode(nullptr)
 {
-	_targetText = _client->component_graphics->getGUI()->addStaticText(L"", recti(10, 10, 100, 18), false, false);
+	_pickerDisplay = new PickerDisplay(client);
 }
 
 Picker::~Picker()
 {
-
+	delete _pickerDisplay;
+	for (auto& o : _objects)
+		removePickedObject(o);
 }
 
 void Picker::preTick()
@@ -45,18 +48,21 @@ void Picker::postTick()
 	ISceneNode* node = collisionManager->getSceneNodeFromCameraBB(_client->component_camera->getCameraNode(), IDFlags::IsPickable);
 	
 	// If there is a new selected node, grab a reference to it
-	if (_objectTable.find(static_cast<PickerNode*>(node)) != _objectTable.end())
+	if (_objects.find(static_cast<PickerNode*>(node)) != _objects.end())
 	{
 		_selectedSceneNode = static_cast<PickerNode*>(node);
 		_selectedSceneNode->grab();
-
+	}
+		/*
 		if (_selectedSceneNode->data.type == PickerObjectType::Entity)
 		{
 			targetString = L"Entity!";
 		}
 	}	
 
-	_targetText->setText(targetString.c_str());
+	_targetText->setText(targetString.c_str());*/
+
+	_pickerDisplay->update();
 }
 
 PickerNode* Picker::getSelectedSceneNode() const
@@ -68,11 +74,11 @@ void Picker::addPickedObject(PickerNode* node)
 {
 	node->grab();
 	node->setID(node->getID() | IDFlags::IsPickable);
-	_objectTable.insert(node);
+	_objects.insert(node);
 }
 
 void Picker::removePickedObject(PickerNode* node)
 {
 	node->drop();
-	_objectTable.erase(node);
+	_objects.erase(node);
 }

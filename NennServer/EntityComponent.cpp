@@ -3,6 +3,7 @@
 #include "NetworkComponent.h"
 #include <assert.h>
 #include "json.hpp"
+#include "NPCLoader.h"
 
 using namespace nlohmann;
 
@@ -13,16 +14,16 @@ EntityComponent::EntityComponent(const GameServer* server)
 		_timeoutTable[i] = 0;
 	clearUpdateFlags();
 
-	// Load a few npcs
-	if (true)
+	NPCLoader::loadNCPs(this);
+
+	// Move the NPCs to random positions for now
+	for (Entity::UID uid = NumberOfPlayers; uid < NumberOfEntities; uid++)
 	{
-		for (int i = 0; i < 10; i++)
-		{
-			Entity::UID uid = grabNextAvailableNPC();
-			Entity& entity = getEntity(uid);
-			entity.position.x = 256 + (rand() % 500) / 100.0f;
-			entity.position.y = 256 + (rand() % 500) / 100.0f;
-		}
+		Entity& entity = getEntity(uid);
+		if (!entity.active)
+			continue;
+		entity.position.x = 256 + (rand() % 500) / 100.0f;
+		entity.position.y = 256 + (rand() % 500) / 100.0f;
 	}
 }
 
@@ -71,6 +72,7 @@ Entity& EntityComponent::initializePlayer(Entity::UID uid)
 	_activePlayers.emplace(uid);
 	Entity& entity = _entities[uid];
 	entity.active = true;
+	entity.type = EntityType::Player;
 	entity.position.x = 256 + float(rand() % 5);
 	entity.position.y = 256 + float(rand() % 5);
 	return entity;

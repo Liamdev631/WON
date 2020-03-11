@@ -81,6 +81,9 @@
     <ClCompile Include="Picker.cpp">
       <Filter>Source Files\Picking</Filter>
     </ClCompile>
+    <ClCompile Include="PickerDisplay.cpp">
+      <Filter>Source Files\Picking</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameClient.h">
@@ -135,6 +138,9 @@
       <Filter>Header Files\Picking</Filter>
     </ClInclude>
     <ClInclude Include="IDFlags.h">
+      <Filter>Header Files\Picking</Filter>
+    </ClInclude>
+    <ClInclude Include="PickerDisplay.h">
       <Filter>Header Files\Picking</Filter>
     </ClInclude>
   </ItemGroup>

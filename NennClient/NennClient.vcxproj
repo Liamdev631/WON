@@ -151,6 +151,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="NetworkComponent.cpp" />
     <ClCompile Include="Picker.cpp" />
+    <ClCompile Include="PickerDisplay.cpp" />
     <ClCompile Include="PickerNode.cpp" />
     <ClCompile Include="TerrainComponent.cpp" />
     <ClCompile Include="Water.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="NetworkComponent.h" />
     <ClInclude Include="Picker.h" />
     <ClInclude Include="IDFlags.h" />
+    <ClInclude Include="PickerDisplay.h" />
     <ClInclude Include="PickerNode.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="TerrainComponent.h" />

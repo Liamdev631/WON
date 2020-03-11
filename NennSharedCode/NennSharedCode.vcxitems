@@ -15,9 +15,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Entity.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)JsonReader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)Entity.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)JsonReader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Settings.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)vec.h" />
   </ItemGroup>

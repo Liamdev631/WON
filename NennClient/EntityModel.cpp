@@ -48,6 +48,7 @@ EntityModel::EntityModel(Entity::UID uid, const GameClient* client, scene::IScen
 EntityModel::~EntityModel()
 {
     _client->component_picker->removePickedObject(_pickerNode);
+    _mesh->drop();
     _pickerNode->drop();
     if (_movementAnimator)
         _movementAnimator->drop();
@@ -55,7 +56,11 @@ EntityModel::~EntityModel()
 
 void EntityModel::setDestination(vec2f pos)
 {
-    removeAnimators();
+    if (_movementAnimator)
+    {
+        removeAnimator(_movementAnimator);
+        _movementAnimator->drop();
+    }
     _movementAnimator = SceneManager->createFlyStraightAnimator(getPosition(), { pos.x, 0, pos.y }, 100);
     addAnimator(_movementAnimator);
     _mesh->setMD2Animation(EMAT_STAND);

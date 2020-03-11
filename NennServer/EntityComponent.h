@@ -9,6 +9,7 @@ using namespace std;
 
 class EntityComponent : public ServerComponent
 {
+	friend class NPCLoader;
 private:
 	// The table of all Entities.
 	EntityTable<Entity> _entities;

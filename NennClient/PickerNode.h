@@ -1,5 +1,5 @@
 #pragma once
-#include <Irrlicht\ISceneNode.h>
+#include <Irrlicht\irrlicht.h>
 #include "IDFlags.h"
 #include <assert.h>
 #include <Entity.h>
@@ -45,15 +45,13 @@ class PickerNode : public scene::ISceneNode
 private:
 	float _radius;
 	core::aabbox3df _bb;
+	irr::scene::IMeshSceneNode* _collisionMesh;
 
 public:
 	PickerTableEntry data;
 
-	PickerNode(scene::ISceneNode* parent = nullptr, scene::ISceneManager* sceneManager = nullptr, irr::s32 idMask = 0)
-		: scene::ISceneNode(parent, sceneManager, idMask | IDFlags::IsPickable)
-	{
-		setRadius(1);
-	}
+	PickerNode(scene::ISceneNode* parent = nullptr, scene::ISceneManager* sceneManager = nullptr, irr::s32 idMask = 0);
+	~PickerNode();
 
 	const core::aabbox3df& getBoundingBox() const override
 	{
@@ -65,11 +63,9 @@ public:
 
 	}
 
-	void setRadius(float radius)
-	{
-		_radius = radius;
-		_bb = core::aabbox3df(-radius, -radius, -radius, radius, radius, radius);
-	}
+	// Sets the radius of this picker node. This is the absolute size, not relative
+	// to the parent.
+	void setRadius(float radius);
 
 	float getRadius()
 	{

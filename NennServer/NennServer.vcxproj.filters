@@ -36,6 +36,9 @@
     <ClCompile Include="NetworkComponent.cpp">
       <Filter>Source Files\GameComponent</Filter>
     </ClCompile>
+    <ClCompile Include="NPCLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EntityComponent.h">
@@ -52,6 +55,9 @@
     </ClInclude>
     <ClInclude Include="NetworkComponent.h">
       <Filter>Header Files\GameComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="NPCLoader.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
